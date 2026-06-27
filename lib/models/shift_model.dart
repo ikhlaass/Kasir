@@ -46,8 +46,8 @@ class ShiftModel {
       endTime: map['end_time'],
       startingCash: (map['starting_cash'] ?? 0.0).toDouble(),
       expectedCash: (map['expected_cash'] ?? 0.0).toDouble(),
-      actualCash: map['actual_cash'] != null ? map['actual_cash'].toDouble() : null,
-      difference: map['difference'] != null ? map['difference'].toDouble() : null,
+      actualCash: (map['actual_cash'] as num?)?.toDouble(),
+      difference: (map['difference'] as num?)?.toDouble(),
       status: map['status'] ?? 'open',
       isSynced: map['is_synced'] ?? 0,
     );

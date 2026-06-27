@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/setting_model.dart';
 import '../../services/database_helper.dart';
 import '../../services/supabase_service.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_fonts.dart';
+import '../../providers/user_management_provider.dart';
+import '../../providers/product_provider.dart';
 import '../auth/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -58,6 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       SettingKeys.teleponToko:   _teleponCtrl.text.trim(),
       SettingKeys.deskripsiToko: _deskripsiCtrl.text.trim(),
     });
+    SupabaseService().pushSettings();
     if (mounted) {
       setState(() => _isSaving = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -72,11 +76,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _syncData() async {
     setState(() => _isSyncing = true);
     await SupabaseService().syncData();
+    await _loadData();
     setState(() => _isSyncing = false);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Sinkronisasi selesai!'), backgroundColor: AppColors.success),
       );
+      // Refresh providers
+      try {
+        context.read<UserManagementProvider>().loadKasir();
+        context.read<ProductProvider>().loadProducts();
+      } catch (_) {}
     }
   }
 
@@ -104,21 +114,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text('Pengaturan', style: AppFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18, letterSpacing: -0.5)),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: AppColors.border, height: 1),
+  Widget build(BuildContext context) { Theme.of(context);
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: Text('Pengaturan', style: AppFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18, letterSpacing: -0.5)),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(color: AppColors.border, height: 1),
+          ),
         ),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.all(24),
-              children: [
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
                 // ── Profile Section ──────────────────────────────────
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -230,7 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         width: double.infinity, height: 44,
                         child: ElevatedButton.icon(
                           onPressed: _isSyncing ? null : _syncData,
-                          icon: _isSyncing ? const SizedBox.shrink() : const Icon(Icons.cloud_sync, size: 20),
+                          icon: _isSyncing ? const SizedBox.shrink() : Icon(Icons.cloud_sync, size: 20),
                           label: _isSyncing
                               ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                               : Text('Sinkronisasi Sekarang', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
@@ -258,10 +271,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.logout_outlined, color: AppColors.error, size: 20),
+                        Icon(Icons.logout_outlined, color: AppColors.error, size: 20),
                         const SizedBox(width: 16),
                         Expanded(child: Text('Keluar (Logout)', style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.error))),
-                        const Icon(Icons.chevron_right, color: AppColors.textLight, size: 20),
+                        Icon(Icons.chevron_right, color: AppColors.textLight, size: 20),
                       ],
                     ),
                   ),
@@ -269,6 +282,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 40),
               ],
             ),
+      ),
     );
   }
 

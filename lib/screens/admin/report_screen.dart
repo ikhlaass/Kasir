@@ -52,7 +52,7 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -192,7 +192,7 @@ class _StatBox extends StatelessWidget {
   const _StatBox({required this.label, required this.value, required this.icon});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -223,7 +223,7 @@ class _TrxCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     final dt = DateTime.parse(trx.tanggalWaktu);
     final dateStr = '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}';
     final timeStr = '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
@@ -245,7 +245,7 @@ class _TrxCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(6)),
-                child: const Icon(Icons.receipt_outlined, color: AppColors.textMedium, size: 20),
+                child: Icon(Icons.receipt_outlined, color: AppColors.textMedium, size: 20),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -291,7 +291,7 @@ class _TrxCard extends StatelessWidget {
       isScrollControlled: true,
       builder: (ctx) => Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),
@@ -303,10 +303,10 @@ class _TrxCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Detail Transaksi', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
+                IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
               ],
             ),
-            const Divider(color: AppColors.border),
+            Divider(color: AppColors.border),
             const SizedBox(height: 12),
             _infoRow('ID Transaksi', 'TRX-${trx.id.toString().padLeft(4, '0')}'),
             _infoRow('Waktu', trx.tanggalWaktu.substring(0, 16).replaceFirst('T', ' ')),
@@ -324,7 +324,7 @@ class _TrxCard extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: details.length,
-                separatorBuilder: (c, i) => const Divider(color: AppColors.border, height: 1),
+                separatorBuilder: (c, i) => Divider(color: AppColors.border, height: 1),
                 itemBuilder: (c, i) {
                   final d = details[i];
                   return Padding(

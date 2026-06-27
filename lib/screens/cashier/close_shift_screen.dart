@@ -71,7 +71,7 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
               const SizedBox(height: 16),
               _summaryRow('Seharusnya Ada:', currencyFormatter.format(widget.shift.expectedCash)),
               _summaryRow('Uang Fisik:', currencyFormatter.format(actualCash)),
-              const Divider(height: 24),
+              Divider(height: 24),
               _summaryRow(
                 'Selisih:',
                 difference == 0 ? 'Balance' : currencyFormatter.format(difference),
@@ -128,7 +128,7 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -179,7 +179,7 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
                       children: [
                         _summaryRow('Modal Awal', currencyFormatter.format(widget.shift.startingCash)),
                         _summaryRow('Pendapatan Tunai', currencyFormatter.format(widget.shift.expectedCash - widget.shift.startingCash)),
-                        const Divider(),
+                        Divider(),
                         _summaryRow('Estimasi Laci', currencyFormatter.format(widget.shift.expectedCash), isBold: true, valueColor: AppColors.primary),
                       ],
                     ),

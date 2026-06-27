@@ -14,7 +14,7 @@ class ProductProvider with ChangeNotifier {
 
   /// Daftar produk Extra / Topping untuk pop-up modifier
   List<ProductModel> get extraProducts => 
-      _products.where((p) => p.kategori.trim().toLowerCase() == 'extra' || p.kategori.trim().toLowerCase() == 'lainnya').toList();
+      _products.where((p) => p.kategori.trim().toLowerCase() == 'extra topping').toList();
 
   /// Semua produk (untuk admin - kelola menu)
   Future<void> loadProducts() async {

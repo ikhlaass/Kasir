@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../models/shift_model.dart';
 import '../../models/user_model.dart';
 import '../../services/database_helper.dart';
@@ -55,7 +54,7 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
@@ -84,7 +83,7 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
                         color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.point_of_sale, color: AppColors.primary, size: 32),
+                      child: Icon(Icons.point_of_sale, color: AppColors.primary, size: 32),
                     ),
                   ),
                   const SizedBox(height: 24),

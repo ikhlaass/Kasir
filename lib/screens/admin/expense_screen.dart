@@ -71,7 +71,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                   const SizedBox(height: 20),
                   DropdownButtonFormField<String>(
-                    value: selectedCategory,
+                    initialValue: selectedCategory,
                     decoration: InputDecoration(
                       labelText: 'Kategori',
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -166,7 +166,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -314,7 +314,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'add_expense',
         onPressed: () => _showExpenseDialog(),
-        icon: const Icon(Icons.add),
+        icon: Icon(Icons.add),
         label: Text('Tambah', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
       ),
     );

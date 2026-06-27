@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/database_helper.dart';
+import '../../services/supabase_service.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_fonts.dart';
 import '../admin/admin_dashboard_screen.dart';
@@ -19,6 +20,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _dbHelper = DatabaseHelper();
   bool _isLoading = false;
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Sinkronisasi data otomatis saat aplikasi baru dibuka
+    SupabaseService().syncData().catchError((_) {});
+  }
 
   Future<void> _login() async {
     final username = _usernameController.text.trim();
@@ -88,9 +96,19 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
+      floatingActionButton: IconButton(
+        icon: Icon(
+          ThemeManager.isDark.value ? Icons.light_mode : Icons.dark_mode,
+          color: AppColors.warning,
+          size: 28,
+        ),
+        onPressed: () {
+          ThemeManager.isDark.value = !ThemeManager.isDark.value;
+        },
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -116,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColors.primary,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.blur_on_rounded,
                         color: Colors.white,
                         size: 28,
@@ -172,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
-                      prefixIcon: const Icon(Icons.lock_outline),
+                      prefixIcon: Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,

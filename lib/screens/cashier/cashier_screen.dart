@@ -11,6 +11,7 @@ import '../../utils/app_fonts.dart';
 import '../auth/login_screen.dart';
 import '../../services/database_helper.dart';
 import '../../services/printer_service.dart';
+import '../../services/supabase_service.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../admin/printer_settings_screen.dart';
 import 'pending_orders_tab.dart';
@@ -151,7 +152,7 @@ class _CashierScreenState extends State<CashierScreen> {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     final isWide = MediaQuery.of(context).size.width >= 950;
 
     return Scaffold(
@@ -192,7 +193,7 @@ class _CashierScreenState extends State<CashierScreen> {
                   heroTag: null,
                   onPressed: () => _showMobileCart(),
                   backgroundColor: AppColors.primary,
-                  icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+                  icon: Icon(Icons.shopping_cart_outlined, color: Colors.white),
                   label: Text('${cart.items.length} Item - Rp ${cart.totalHarga.toInt()}',
                       style: AppFonts.poppins(fontWeight: FontWeight.w600, color: Colors.white)),
                 );
@@ -205,7 +206,7 @@ class _CashierScreenState extends State<CashierScreen> {
   Widget _buildSidebar() {
     return Container(
       width: 220,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surface,
         border: Border(right: BorderSide(color: AppColors.border, width: 1)),
       ),
@@ -223,7 +224,7 @@ class _CashierScreenState extends State<CashierScreen> {
                     color: AppColors.primary,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.point_of_sale_rounded, color: Colors.white, size: 20),
+                  child: Icon(Icons.point_of_sale_rounded, color: Colors.white, size: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -250,9 +251,33 @@ class _CashierScreenState extends State<CashierScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 child: Row(
                   children: [
-                    const Icon(Icons.print_outlined, color: AppColors.textLight, size: 18),
+                    Icon(Icons.print_outlined, color: AppColors.textLight, size: 18),
                     const SizedBox(width: 12),
                     Text('Printer', style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textLight)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+            child: InkWell(
+              onTap: () async {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Menyinkronkan data...')));
+                await SupabaseService().syncDataFull().catchError((_) {});
+                if (!mounted) return;
+                context.read<ProductProvider>().loadActiveProducts();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sinkronisasi selesai')));
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                child: Row(
+                  children: [
+                    Icon(Icons.sync, color: AppColors.textLight, size: 18),
+                    const SizedBox(width: 12),
+                    Text('Sinkronisasi', style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textLight)),
                   ],
                 ),
               ),
@@ -277,7 +302,7 @@ class _CashierScreenState extends State<CashierScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   child: Row(
                     children: [
-                      const Icon(Icons.admin_panel_settings_outlined, color: AppColors.textMedium, size: 18),
+                      Icon(Icons.admin_panel_settings_outlined, color: AppColors.textMedium, size: 18),
                       const SizedBox(width: 12),
                       Text('Ke Admin Panel', style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textMedium)),
                     ],
@@ -327,7 +352,7 @@ class _CashierScreenState extends State<CashierScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.logout_outlined, size: 18),
+                    icon: Icon(Icons.logout_outlined, size: 18),
                     color: AppColors.error,
                     onPressed: _showLogoutDialog,
                     tooltip: 'Logout',
@@ -335,7 +360,7 @@ class _CashierScreenState extends State<CashierScreen> {
                     constraints: const BoxConstraints(),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.money_off, size: 18),
+                    icon: Icon(Icons.money_off, size: 18),
                     color: AppColors.warning,
                     onPressed: _showKasKeluarDialog,
                     tooltip: 'Kas Keluar',
@@ -344,7 +369,7 @@ class _CashierScreenState extends State<CashierScreen> {
                   ),
                   const SizedBox(width: 8),
                   IconButton(
-                    icon: const Icon(Icons.point_of_sale, size: 18),
+                    icon: Icon(Icons.point_of_sale, size: 18),
                     color: AppColors.info,
                     onPressed: _closeShift,
                     tooltip: 'Tutup Shift',
@@ -430,7 +455,7 @@ class _CashierScreenState extends State<CashierScreen> {
       builder: (ctx) => Padding(
         padding: EdgeInsets.only(top: 100, bottom: MediaQuery.of(ctx).viewInsets.bottom),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
@@ -441,6 +466,7 @@ class _CashierScreenState extends State<CashierScreen> {
   }
 
   Widget _buildMenuSection() {
+    final provider = context.watch<ProductProvider>();
     return Column(
       children: [
         // Header
@@ -454,28 +480,41 @@ class _CashierScreenState extends State<CashierScreen> {
               return Row(
                 children: [
                   Text('Kasir', style: AppFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark, letterSpacing: -0.5)),
+                                    if (!isWide)
+                    IconButton(
+                      icon: Icon(
+                        ThemeManager.isDark.value ? Icons.light_mode : Icons.dark_mode,
+                        color: AppColors.warning,
+                      ),
+                      onPressed: () {
+                        // JURUS GANTI TEMA INSTAN!
+                        ThemeManager.isDark.value = !ThemeManager.isDark.value;
+                      },
+                      tooltip: 'Ganti Tema',
+                    ),
+
                   const Spacer(),
                   if (!isWide && widget.user.role == 'admin')
                     IconButton(
-                      icon: const Icon(Icons.admin_panel_settings_outlined, color: AppColors.primary),
+                      icon: Icon(Icons.admin_panel_settings_outlined, color: AppColors.primary),
                       onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AdminDashboardScreen(user: widget.user))),
                       tooltip: 'Ke Admin Panel',
                     ),
                   if (!isWide)
                     IconButton(
-                      icon: const Icon(Icons.logout, color: AppColors.error),
+                      icon: Icon(Icons.logout, color: AppColors.error),
                       onPressed: _showLogoutDialog,
                       tooltip: 'Keluar',
                     ),
                   if (!isWide)
                     IconButton(
-                      icon: const Icon(Icons.money_off, color: AppColors.warning),
+                      icon: Icon(Icons.money_off, color: AppColors.warning),
                       onPressed: _showKasKeluarDialog,
                       tooltip: 'Kas Keluar',
                     ),
                   if (!isWide)
                     IconButton(
-                      icon: const Icon(Icons.point_of_sale, color: AppColors.info),
+                      icon: Icon(Icons.point_of_sale, color: AppColors.info),
                       onPressed: _closeShift,
                       tooltip: 'Tutup Shift',
                     ),
@@ -492,7 +531,20 @@ class _CashierScreenState extends State<CashierScreen> {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: ['Semua', 'Nasi Goreng', 'Mie', 'Minuman', 'Lainnya'].map((cat) {
+              children: () {
+                final catMap = <String, int>{};
+                for (var p in provider.products) {
+                  if (p.id != null) {
+                    if (!catMap.containsKey(p.kategori) || p.id! < catMap[p.kategori]!) {
+                      catMap[p.kategori] = p.id!;
+                    }
+                  }
+                }
+                final cats = catMap.keys.toList();
+                cats.removeWhere((c) => c.toLowerCase() == 'extra topping');
+                cats.sort((a, b) => catMap[a]!.compareTo(catMap[b]!));
+                return ['Semua', ...cats];
+              }().map((cat) {
                 final selected = _selectedCategory == cat;
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
@@ -530,7 +582,7 @@ class _CashierScreenState extends State<CashierScreen> {
               if (provider.isLoading) return const Center(child: CircularProgressIndicator());
               
               final products = _selectedCategory == 'Semua'
-                  ? provider.products
+                  ? provider.products.where((p) => p.kategori.toLowerCase() != 'extra topping').toList()
                   : provider.products.where((p) => p.kategori == _selectedCategory).toList();
 
               if (products.isEmpty) {
@@ -570,16 +622,16 @@ class _CashierScreenState extends State<CashierScreen> {
             children: [
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 36, 20, 20),
-                decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.divider, width: 1))),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.divider, width: 1))),
                 child: Row(
                   children: [
-                    const Icon(Icons.shopping_basket_outlined, color: AppColors.textDark),
+                    Icon(Icons.shopping_basket_outlined, color: AppColors.textDark),
                     const SizedBox(width: 12),
                     Text(cart.activeTransactionId == null ? 'Pesanan Baru' : 'Edit Pesanan', style: AppFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
                     const Spacer(),
                     if (cart.items.isNotEmpty)
                       IconButton(
-                        icon: const Icon(Icons.delete_outline, size: 20),
+                        icon: Icon(Icons.delete_outline, size: 20),
                         color: AppColors.error,
                         onPressed: () => _confirmClearCart(cart),
                       ),
@@ -603,7 +655,7 @@ class _CashierScreenState extends State<CashierScreen> {
                     : ListView.separated(
                         padding: const EdgeInsets.all(20),
                         itemCount: cart.items.length,
-                        separatorBuilder: (c, idx) => const Divider(color: AppColors.border, height: 24),
+                        separatorBuilder: (c, idx) => Divider(color: AppColors.border, height: 24),
                         itemBuilder: (ctx, i) {
                           final item = cart.items[i];
                           return Row(
@@ -648,7 +700,7 @@ class _CashierScreenState extends State<CashierScreen> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.surface,
-                    border: const Border(top: BorderSide(color: AppColors.border, width: 1)),
+                    border: Border(top: BorderSide(color: AppColors.border, width: 1)),
                     boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -5))],
                   ),
                   child: Column(
@@ -669,7 +721,7 @@ class _CashierScreenState extends State<CashierScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.surface,
                                 foregroundColor: AppColors.primary,
-                                side: const BorderSide(color: AppColors.primary),
+                                side: BorderSide(color: AppColors.primary),
                                 padding: const EdgeInsets.symmetric(vertical: 14),
                                 elevation: 0,
                               ),
@@ -764,42 +816,9 @@ class _CashierScreenState extends State<CashierScreen> {
         content: Text('Pesanan berhasil disimpan', style: AppFonts.poppins()),
         backgroundColor: AppColors.success,
       ));
-      setState(() => _currentIndex = 1); // pindah ke tab pesanan aktif
     }
   }
 
-  void _showAddNoteDialog(BuildContext context, CartProvider cart, CartItem item) {
-    final noteCtrl = TextEditingController(text: item.catatan ?? '');
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Catatan untuk ${item.product.namaMenu}', style: AppFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
-        content: TextField(
-          controller: noteCtrl,
-          decoration: const InputDecoration(
-            hintText: 'Cth: Extra pedas, tanpa daun bawang',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: 2,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('Batal', style: AppFonts.poppins(color: AppColors.textMedium)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              cart.updateNote(item.product, noteCtrl.text);
-              Navigator.pop(ctx);
-            },
-            child: Text('Simpan', style: AppFonts.poppins()),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _showPaymentDialog(BuildContext context, CartProvider cart) {
     String selectedMethod = 'Tunai';
@@ -898,7 +917,7 @@ class _CashierScreenState extends State<CashierScreen> {
                               fillColor: AppColors.background,
                               contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: AppColors.primary, width: 2)),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: AppColors.primary, width: 2)),
                             ),
                             onChanged: (v) => setStateSB(() {}),
                           ),
@@ -928,7 +947,7 @@ class _CashierScreenState extends State<CashierScreen> {
                                 style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                  side: const BorderSide(color: AppColors.border),
+                                  side: BorderSide(color: AppColors.border),
                                 ),
                                 child: Text('Batal', style: AppFonts.poppins(color: AppColors.textMedium, fontWeight: FontWeight.w600)),
                               ),
@@ -938,7 +957,6 @@ class _CashierScreenState extends State<CashierScreen> {
                               flex: 2,
                               child: ElevatedButton(
                                 onPressed: valid ? () async {
-                                  final sm = ScaffoldMessenger.of(context);
                                   final nav = Navigator.of(ctx);
                                   final db = DatabaseHelper();
                                   final trx = TransactionModel(
@@ -1000,7 +1018,7 @@ class _CashierScreenState extends State<CashierScreen> {
                                               Container(
                                                 padding: const EdgeInsets.all(16),
                                                 decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), shape: BoxShape.circle),
-                                                child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 64),
+                                                child: Icon(Icons.check_circle_rounded, color: AppColors.success, size: 64),
                                               ),
                                               const SizedBox(height: 24),
                                               Text('Transaksi Berhasil!', style: AppFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark)),
@@ -1021,7 +1039,7 @@ class _CashierScreenState extends State<CashierScreen> {
                                                       ));
                                                     }
                                                   },
-                                                  icon: const Icon(Icons.print_outlined, size: 18),
+                                                  icon: Icon(Icons.print_outlined, size: 18),
                                                   label: Text('Cetak Struk', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
                                                   style: ElevatedButton.styleFrom(
                                                     backgroundColor: AppColors.primary,
@@ -1036,7 +1054,6 @@ class _CashierScreenState extends State<CashierScreen> {
                                                 child: TextButton(
                                                   onPressed: () {
                                                     Navigator.pop(sCtx);
-                                                    setState(() => _currentIndex = 1);
                                                   },
                                                   style: TextButton.styleFrom(
                                                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1114,7 +1131,7 @@ class _CashierScreenState extends State<CashierScreen> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close),
+                        icon: Icon(Icons.close),
                         onPressed: () => Navigator.pop(ctx),
                       ),
                     ],
@@ -1171,7 +1188,7 @@ class _CashierScreenState extends State<CashierScreen> {
                                       backgroundColor: AppColors.surface,
                                       foregroundColor: AppColors.primary,
                                       elevation: 0,
-                                      side: const BorderSide(color: AppColors.primary),
+                                      side: BorderSide(color: AppColors.primary),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                     ),
                                     onPressed: () => setStateSB(() => selectedExtras[extra] = 1),
@@ -1181,15 +1198,15 @@ class _CashierScreenState extends State<CashierScreen> {
                                   Row(
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.remove_circle_outline, color: AppColors.error),
+                                        icon: Icon(Icons.remove_circle_outline, color: AppColors.error),
                                         onPressed: () => setStateSB(() {
-                                          if (qty == 1) selectedExtras.remove(extra);
-                                          else selectedExtras[extra] = qty - 1;
+                                          if (qty == 1) { selectedExtras.remove(extra); }
+                                          else { selectedExtras[extra] = qty - 1; }
                                         }),
                                       ),
                                       Text('$qty', style: AppFonts.poppins(fontWeight: FontWeight.bold)),
                                       IconButton(
-                                        icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
+                                        icon: Icon(Icons.add_circle_outline, color: AppColors.primary),
                                         onPressed: () => setStateSB(() => selectedExtras[extra] = qty + 1),
                                       ),
                                     ],
@@ -1245,7 +1262,7 @@ class _ProductCard extends StatelessWidget {
   const _ProductCard({required this.product, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),

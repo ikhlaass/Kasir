@@ -126,7 +126,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     if (_isLoading) return const Center(child: CircularProgressIndicator());
 
     if (_orders.isEmpty) {
@@ -149,7 +149,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
         // Header
         Container(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.surface,
             border: Border(bottom: BorderSide(color: AppColors.border, width: 1)),
           ),
@@ -167,7 +167,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
               ),
               const Spacer(),
               IconButton(
-                icon: const Icon(Icons.refresh_outlined),
+                icon: Icon(Icons.refresh_outlined),
                 onPressed: _loadOrders,
                 tooltip: 'Refresh',
               ),
@@ -209,7 +209,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
           // Header card
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(bottom: BorderSide(color: AppColors.border)),
             ),
             child: Row(
@@ -276,7 +276,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
-                        child: const Icon(Icons.circle, size: 5, color: AppColors.textLight),
+                        child: Icon(Icons.circle, size: 5, color: AppColors.textLight),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -307,7 +307,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                     ],
                   ),
                 )),
-                const Divider(color: AppColors.border, height: 20),
+                Divider(color: AppColors.border, height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -330,7 +330,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                 const Spacer(),
                 if (isPending)
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.payment_outlined, size: 16),
+                    icon: Icon(Icons.payment_outlined, size: 16),
                     label: Text('Bayar', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600)),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -340,7 +340,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                   )
                 else
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.check_circle_outline, size: 16),
+                    icon: Icon(Icons.check_circle_outline, size: 16),
                     label: Text('Selesaikan', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.success,

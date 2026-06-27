@@ -248,11 +248,14 @@ class DatabaseHelper {
 
   Future<int> updateUserPassword(int userId, String newPassword) async {
     final db = await database;
-    return await db.update('users', {'password': newPassword}, where: 'id = ?', whereArgs: [userId]);
+    return await db.update('users', {'password': newPassword, 'is_synced': 0}, where: 'id = ?', whereArgs: [userId]);
   }
 
   Future<int> deleteUser(int id) async {
     final db = await database;
+    try {
+      await SupabaseService().supabase.from('users').delete().eq('id', id);
+    } catch (_) {}
     return await db.delete('users', where: 'id = ? AND role = ?', whereArgs: [id, 'kasir']);
   }
 
@@ -275,8 +278,15 @@ class DatabaseHelper {
   /// Hanya produk yang aktif (untuk kasir)
   Future<List<ProductModel>> getActiveProducts() async {
     final db = await database;
-    final maps = await db.query('products',
-        where: 'is_active = 1', orderBy: 'nama_menu ASC');
+    final sql = '''
+      SELECT p.*, COALESCE(SUM(td.qty), 0) as sold_qty
+      FROM products p
+      LEFT JOIN transaction_details td ON p.id = td.id_produk
+      WHERE p.is_active = 1
+      GROUP BY p.id
+      ORDER BY sold_qty DESC, p.id ASC
+    ''';
+    final maps = await db.rawQuery(sql);
     return maps.map((m) => ProductModel.fromMap(m)).toList();
   }
 
@@ -291,18 +301,28 @@ class DatabaseHelper {
 
   Future<int> updateProduct(ProductModel product) async {
     final db = await database;
-    return await db.update('products', product.toMap(),
+    final map = product.toMap();
+    map['is_synced'] = 0;
+    int res = await db.update('products', map,
         where: 'id = ?', whereArgs: [product.id]);
+    SupabaseService().syncData();
+    return res;
   }
 
   Future<int> toggleProductActive(int id, bool isActive) async {
     final db = await database;
-    return await db.update('products', {'is_active': isActive ? 1 : 0},
+    int res = await db.update('products', {'is_active': isActive ? 1 : 0, 'is_synced': 0},
         where: 'id = ?', whereArgs: [id]);
+    SupabaseService().syncData();
+    return res;
   }
 
   Future<int> deleteProduct(int id) async {
     final db = await database;
+    // Hapus dari Supabase sekalian kalau lagi online
+    try {
+      await SupabaseService().supabase.from('products').delete().eq('id', id);
+    } catch (_) {}
     return await db.delete('products', where: 'id = ?', whereArgs: [id]);
   }
 
@@ -320,21 +340,28 @@ class DatabaseHelper {
       if (transaction.id == null) {
         transactionId = await txn.insert('transactions', transaction.toMap());
       } else {
-        await txn.update('transactions', transaction.toMap(), where: 'id = ?', whereArgs: [transaction.id]);
+        final map = transaction.toMap();
+        map['is_synced'] = 0;
+        await txn.update('transactions', map, where: 'id = ?', whereArgs: [transaction.id]);
         await txn.delete('transaction_details', where: 'id_transaksi = ?', whereArgs: [transaction.id]);
       }
       
       for (final detail in details) {
         final detailMap = detail.toMap();
         detailMap['id_transaksi'] = transactionId;
+        // is_synced akan otomatis 0 karena DEFAULT 0
         await txn.insert('transaction_details', detailMap);
       }
     });
+    SupabaseService().syncData();
     return transactionId;
   }
 
   Future<void> deleteTransaction(int transactionId) async {
     final db = await database;
+    try {
+      await SupabaseService().supabase.from('transactions').delete().eq('id', transactionId);
+    } catch (_) {}
     await db.delete('transactions', where: 'id = ?', whereArgs: [transactionId]);
   }
 
@@ -346,7 +373,8 @@ class DatabaseHelper {
 
   Future<void> completeTransaction(int transactionId) async {
     final db = await database;
-    await db.update('transactions', {'status': 'completed'}, where: 'id = ?', whereArgs: [transactionId]);
+    await db.update('transactions', {'status': 'completed', 'is_synced': 0}, where: 'id = ?', whereArgs: [transactionId]);
+    SupabaseService().syncData();
   }
 
   Future<List<TransactionModel>> getAllTransactions() async {
@@ -538,16 +566,24 @@ class DatabaseHelper {
 
   Future<int> insertExpense(ExpenseModel expense) async {
     final db = await database;
-    return await db.insert('expenses', expense.toMap());
+    int id = await db.insert('expenses', expense.toMap());
+    SupabaseService().syncData();
+    return id;
   }
 
   Future<void> updateExpense(ExpenseModel expense) async {
     final db = await database;
-    await db.update('expenses', expense.toMap(), where: 'id = ?', whereArgs: [expense.id]);
+    final map = expense.toMap();
+    map['is_synced'] = 0;
+    await db.update('expenses', map, where: 'id = ?', whereArgs: [expense.id]);
+    SupabaseService().syncData();
   }
 
   Future<void> deleteExpense(int id) async {
     final db = await database;
+    try {
+      await SupabaseService().supabase.from('expenses').delete().eq('id', id);
+    } catch (_) {}
     await db.delete('expenses', where: 'id = ?', whereArgs: [id]);
   }
 

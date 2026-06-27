@@ -32,62 +32,66 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       backgroundColor: Colors.transparent,
       builder: (ctx) => Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-          ),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Tambah Kasir', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                    IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  key: const Key('input_username'),
-                  controller: usernameCtrl,
-                  decoration: _inputDecoration('Username', Icons.person_outline),
-                  validator: (v) => v == null || v.isEmpty ? 'Wajib diisi' : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  key: const Key('input_password'),
-                  controller: passwordCtrl,
-                  obscureText: true,
-                  decoration: _inputDecoration('Password', Icons.lock_outline),
-                  validator: (v) => v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 44,
-                  child: ElevatedButton(
-                    key: const Key('btn_simpan_kasir'),
-                    onPressed: () async {
-                      if (!formKey.currentState!.validate()) return;
-                      final prov = context.read<UserManagementProvider>();
-                      final err = await prov.addKasir(username: usernameCtrl.text.trim(), password: passwordCtrl.text);
-                      if (!ctx.mounted) return;
-                      if (err == null) {
-                        Navigator.pop(ctx);
-                        _showSnackBar('Kasir berhasil ditambahkan', AppColors.success);
-                      } else {
-                        _showSnackBar(err, AppColors.error);
-                      }
-                    },
-                    child: Text('Simpan Kasir', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+        child: GestureDetector(
+          onTap: () => FocusScope.of(ctx).unfocus(),
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Tambah Kasir', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                      IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    key: const Key('input_username'),
+                    controller: usernameCtrl,
+                    decoration: _inputDecoration('Username', Icons.person_outline),
+                    validator: (v) => v == null || v.isEmpty ? 'Wajib diisi' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    key: const Key('input_password'),
+                    controller: passwordCtrl,
+                    obscureText: true,
+                    decoration: _inputDecoration('Password', Icons.lock_outline),
+                    validator: (v) => v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 44,
+                    child: ElevatedButton(
+                      key: const Key('btn_simpan_kasir'),
+                      onPressed: () async {
+                        if (!formKey.currentState!.validate()) return;
+                        final prov = context.read<UserManagementProvider>();
+                        final err = await prov.addKasir(username: usernameCtrl.text.trim(), password: passwordCtrl.text);
+                        if (!ctx.mounted) return;
+                        if (err == null) {
+                          Navigator.pop(ctx);
+                          _showSnackBar('Kasir berhasil ditambahkan', AppColors.success);
+                        } else {
+                          _showSnackBar(err, AppColors.error);
+                        }
+                      },
+                      child: Text('Simpan Kasir', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -105,49 +109,53 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       backgroundColor: Colors.transparent,
       builder: (ctx) => Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-          ),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Ganti Password', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                    IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
-                  ],
-                ),
-                Text('Untuk kasir: ${kasir.username}', style: AppFonts.poppins(fontSize: 13, color: AppColors.textLight)),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: passwordCtrl,
-                  obscureText: true,
-                  decoration: _inputDecoration('Password Baru', Icons.lock_reset_outlined),
-                  validator: (v) => v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 44,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (!formKey.currentState!.validate()) return;
-                      await context.read<UserManagementProvider>().changePassword(kasir.id!, passwordCtrl.text);
-                      if (!ctx.mounted) return;
-                      Navigator.pop(ctx);
-                      _showSnackBar('Password berhasil diubah', AppColors.success);
-                    },
-                    child: Text('Simpan Password', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+        child: GestureDetector(
+          onTap: () => FocusScope.of(ctx).unfocus(),
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Ganti Password', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                      IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
+                    ],
                   ),
-                ),
-              ],
+                  Text('Untuk kasir: ${kasir.username}', style: AppFonts.poppins(fontSize: 13, color: AppColors.textLight)),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: passwordCtrl,
+                    obscureText: true,
+                    decoration: _inputDecoration('Password Baru', Icons.lock_reset_outlined),
+                    validator: (v) => v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 44,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (!formKey.currentState!.validate()) return;
+                        await context.read<UserManagementProvider>().changePassword(kasir.id!, passwordCtrl.text);
+                        if (!ctx.mounted) return;
+                        Navigator.pop(ctx);
+                        _showSnackBar('Password berhasil diubah', AppColors.success);
+                      },
+                      child: Text('Simpan Password', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -199,7 +207,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -213,10 +221,10 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         key: const Key('btn_add_kasir'),
         heroTag: 'add_user_hero_tag',
         onPressed: _showAddKasirSheet,
-        icon: const Icon(Icons.person_add_outlined),
+        icon: Icon(Icons.person_add_outlined),
         label: Text('Tambah Kasir', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: const BorderSide(color: AppColors.primary, width: 1)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: AppColors.primary, width: 1)),
       ),
       body: Consumer<UserManagementProvider>(
         builder: (context, provider, child) {
@@ -274,14 +282,14 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.key_outlined, size: 18),
+                          icon: Icon(Icons.key_outlined, size: 18),
                           color: AppColors.textMedium,
                           onPressed: () => _showChangePasswordSheet(kasir),
                           tooltip: 'Ganti Password',
                           splashRadius: 20,
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete_outline, size: 18),
+                          icon: Icon(Icons.delete_outline, size: 18),
                           color: AppColors.error,
                           onPressed: () => _confirmDelete(kasir),
                           tooltip: 'Hapus Kasir',

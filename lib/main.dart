@@ -19,9 +19,8 @@ void main() async {
   // Inisialisasi Supabase
   await Supabase.initialize(
     url: 'https://jrruipuhczfzbmldxpil.supabase.co',
-    anonKey: 'sb_publishable__WM2TyNszoAW2-fr2d_PVw_ZcXUYf3V',
+    publishableKey: 'sb_publishable__WM2TyNszoAW2-fr2d_PVw_ZcXUYf3V',
   );
-  WidgetsFlutterBinding.ensureInitialized();
 
   // Inisialisasi locale Indonesia untuk format tanggal
   await initializeDateFormatting('id_ID', null);
@@ -54,32 +53,39 @@ class KasirApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => UserManagementProvider()),
       ],
-      child: MaterialApp(
-        title: 'Kasir Nasi Goreng',
-        debugShowCheckedModeBanner: false,
-        theme: _buildTheme(),
-        home: const LoginScreen(),
+      child: ValueListenableBuilder<bool>(
+        valueListenable: ThemeManager.isDark,
+        builder: (context, isDark, child) {
+          return MaterialApp(
+            title: 'Kasir Nasi Goreng',
+            debugShowCheckedModeBanner: false,
+            theme: _buildTheme(isDark),
+            home: const LoginScreen(),
+          );
+        },
       ),
     );
   }
 
-  ThemeData _buildTheme() {
+  ThemeData _buildTheme(bool isDark) {
     return ThemeData(
+      brightness: isDark ? Brightness.dark : Brightness.light,
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
+        brightness: isDark ? Brightness.dark : Brightness.light,
         seedColor: AppColors.primary,
         primary: AppColors.primary,
         surface: AppColors.background,
       ),
       textTheme: AppFonts.textTheme(),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.surface,
         foregroundColor: AppColors.textDark,
         elevation: 0,
         centerTitle: false,
         scrolledUnderElevation: 0,
       ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
@@ -98,15 +104,15 @@ class KasirApp extends StatelessWidget {
         fillColor: AppColors.surface,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.border, width: 1),
+          borderSide: BorderSide(color: AppColors.border, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.border, width: 1),
+          borderSide: BorderSide(color: AppColors.border, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
         ),
       ),
       scaffoldBackgroundColor: AppColors.background,
@@ -115,10 +121,10 @@ class KasirApp extends StatelessWidget {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: AppColors.border, width: 1),
+          side: BorderSide(color: AppColors.border, width: 1),
         ),
       ),
-      dividerTheme: const DividerThemeData(
+      dividerTheme: DividerThemeData(
         color: AppColors.divider,
         space: 1,
       ),

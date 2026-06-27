@@ -33,8 +33,21 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
     final nameCtrl = TextEditingController(text: product?.namaMenu ?? '');
     final priceCtrl = TextEditingController(
         text: product != null ? product.harga.toInt().toString() : '');
-    final categoryCtrl =
-        TextEditingController(text: product?.kategori ?? 'Nasi Goreng');
+    final provider = context.read<ProductProvider>();
+    final availableCategories = provider.products.map((p) => p.kategori).toSet().toList();
+    availableCategories.removeWhere((c) => c.toLowerCase() == 'extra topping');
+    availableCategories.sort();
+    availableCategories.add('Extra Topping');
+    availableCategories.add('Tambah Kategori Baru...');
+
+    String initialCategory = product?.kategori ?? 'Nasi Goreng';
+    
+    if (!availableCategories.contains(initialCategory)) {
+      availableCategories.insert(0, initialCategory);
+    }
+    
+    final categoryCtrl = TextEditingController(text: initialCategory);
+    bool isCustomCategory = false;
     final formKey = GlobalKey<FormState>();
     
     String? currentImagePath = product?.imagePath;
@@ -125,22 +138,53 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                             val == null || val.isEmpty ? 'Wajib diisi' : null,
                       ),
                       const SizedBox(height: 16),
-                      DropdownButtonFormField<String>(
-                        key: const Key('input_kategori_menu'),
-                        initialValue: categoryCtrl.text,
-                        decoration: _dialogInputDecoration(label: 'Kategori'),
-                        dropdownColor: AppColors.surface,
-                        items: const [
-                          DropdownMenuItem(
-                              value: 'Nasi Goreng', child: Text('Nasi Goreng')),
-                          DropdownMenuItem(value: 'Mie', child: Text('Mie')),
-                          DropdownMenuItem(value: 'Minuman', child: Text('Minuman')),
-                          DropdownMenuItem(value: 'Lainnya', child: Text('Lainnya')),
-                        ],
-                        onChanged: (val) {
-                          if (val != null) categoryCtrl.text = val;
-                        },
-                      ),
+                      if (!isCustomCategory)
+                        DropdownButtonFormField<String>(
+                          key: const Key('input_kategori_menu'),
+                          initialValue: categoryCtrl.text,
+                          decoration: _dialogInputDecoration(label: 'Kategori'),
+                          dropdownColor: AppColors.surface,
+                          items: availableCategories.map((cat) {
+                            return DropdownMenuItem(
+                              value: cat,
+                              child: Text(cat == 'Tambah Kategori Baru...' ? '+ $cat' : cat,
+                                  style: AppFonts.poppins(
+                                      color: cat == 'Tambah Kategori Baru...' ? AppColors.primary : AppColors.textDark,
+                                      fontWeight: cat == 'Tambah Kategori Baru...' ? FontWeight.bold : FontWeight.normal)),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val == 'Tambah Kategori Baru...') {
+                              setDialogState(() {
+                                isCustomCategory = true;
+                                categoryCtrl.text = ''; // Clear for new input
+                              });
+                            } else if (val != null) {
+                              categoryCtrl.text = val;
+                            }
+                          },
+                        )
+                      else
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: categoryCtrl,
+                                decoration: _dialogInputDecoration(label: 'Nama Kategori Baru'),
+                                validator: (val) => val == null || val.trim().isEmpty ? 'Wajib diisi' : null,
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.close, color: AppColors.error),
+                              onPressed: () {
+                                setDialogState(() {
+                                  isCustomCategory = false;
+                                  categoryCtrl.text = availableCategories.firstWhere((c) => c != 'Tambah Kategori Baru...');
+                                });
+                              },
+                            )
+                          ],
+                        ),
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -180,6 +224,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                                 imagePath: savedImagePath,
                               );
 
+                              if (!ctx.mounted) return;
                               final prov = ctx.read<ProductProvider>();
                               if (isEdit) {
                                 await prov.updateProduct(pModel);
@@ -241,7 +286,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Kelola Menu',
@@ -256,13 +301,13 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
         key: const Key('btn_add_product'),
         heroTag: 'add_product_hero_tag',
         onPressed: () => _showProductDialog(),
-        icon: const Icon(Icons.add),
+        icon: Icon(Icons.add),
         label: Text('Menu Baru',
             style: AppFonts.poppins(fontWeight: FontWeight.w600)),
         elevation: 0,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: AppColors.primary, width: 1)),
+            side: BorderSide(color: AppColors.primary, width: 1)),
       ),
       body: Consumer<ProductProvider>(
         builder: (context, provider, child) {
@@ -351,7 +396,7 @@ class _ProductCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     final inactive = !product.isActive;
     return Opacity(
       opacity: inactive ? 0.6 : 1.0,
@@ -406,7 +451,7 @@ class _ProductCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Container(width: 4, height: 4, decoration: const BoxDecoration(color: AppColors.border, shape: BoxShape.circle)),
+                      Container(width: 4, height: 4, decoration: BoxDecoration(color: AppColors.border, shape: BoxShape.circle)),
                       const SizedBox(width: 8),
                       Text(
                         _formatCurrency(product.harga),
@@ -435,13 +480,13 @@ class _ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 IconButton(
-                  icon: const Icon(Icons.edit_outlined, size: 18),
+                  icon: Icon(Icons.edit_outlined, size: 18),
                   color: AppColors.textMedium,
                   onPressed: onEdit,
                   splashRadius: 20,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, size: 18),
+                  icon: Icon(Icons.delete_outline, size: 18),
                   color: AppColors.error,
                   onPressed: onDelete,
                   splashRadius: 20,

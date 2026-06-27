@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../models/user_model.dart';
 import '../services/database_helper.dart';
+import '../services/supabase_service.dart';
 
 /// UserManagementProvider — state management untuk kelola akun kasir.
 class UserManagementProvider with ChangeNotifier {
@@ -48,6 +49,7 @@ class UserManagementProvider with ChangeNotifier {
         role: 'kasir',
       ));
       notifyListeners();
+      SupabaseService().syncData();
       return null;
     } catch (e) {
       return 'Gagal menambah kasir: $e';
@@ -68,6 +70,7 @@ class UserManagementProvider with ChangeNotifier {
         role: 'kasir',
       );
       notifyListeners();
+      SupabaseService().syncData();
     }
     return null;
   }
@@ -78,6 +81,7 @@ class UserManagementProvider with ChangeNotifier {
       await _db.deleteUser(id);
       _kasirList.removeWhere((u) => u.id == id);
       notifyListeners();
+      SupabaseService().syncData();
       return null;
     } catch (e) {
       return 'Gagal menghapus kasir: $e';

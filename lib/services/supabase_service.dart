@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sqflite/sqflite.dart';
 import 'database_helper.dart';
@@ -10,79 +11,84 @@ class SupabaseService {
   final supabase = Supabase.instance.client;
   final DatabaseHelper _db = DatabaseHelper();
 
-  // Memanggil fungsi sync ketika ada koneksi
+  // Sync data: push unsynced local data then pull all from Cloud (incl. settings)
   Future<void> syncData() async {
     try {
-      // Cek koneksi sederhana ke Supabase (misal get 1 baris)
       await supabase.from('users').select().limit(1);
-      
-      // Jika berhasil, mulai proses Push (Upload data lokal ke Cloud)
       await _pushUnsyncedData();
-      
-      // Kemudian Pull (Download data baru dari Cloud ke lokal)
-      await _pullData();
+      await _pullData(pullSettings: true);
     } catch (e) {
-      // Jika gagal (offline), diamkan saja. Data aman di SQLite.
-      print("Offline / Sync Failed: $e");
+      debugPrint('Offline / Sync Failed: $e');
+    }
+  }
+
+  // Alias — sama dengan syncData
+  Future<void> syncDataFull() async => syncData();
+
+  // Khusus dipanggil saat Admin klik "Simpan Perubahan" di halaman Pengaturan.
+  // Hanya push settings, tidak menarik data lain.
+  Future<void> pushSettings() async {
+    try {
+      await supabase.from('users').select().limit(1);
+      final db = await _db.database;
+      final allSettings = await db.query('settings');
+      if (allSettings.isNotEmpty) {
+        await supabase.from('settings').upsert(allSettings);
+      }
+    } catch (e) {
+      debugPrint('Gagal push settings: $e');
     }
   }
 
   Future<void> _pushUnsyncedData() async {
     final db = await _db.database;
-    final tables = ['users', 'products', 'transactions', 'transaction_details', 'expenses', 'shifts'];
+    const tables = ['users', 'products', 'transactions', 'transaction_details', 'expenses', 'shifts'];
 
-    for (String table in tables) {
+    for (final table in tables) {
       final unsynced = await db.query(table, where: 'is_synced = ?', whereArgs: [0]);
       if (unsynced.isEmpty) continue;
 
       try {
-        // Hapus kunci is_synced sebelum dikirim ke Supabase karena di Supabase tidak ada kolom is_synced
-        List<Map<String, dynamic>> recordsToPush = [];
-        for (var record in unsynced) {
+        final recordsToPush = unsynced.map((record) {
           final map = Map<String, dynamic>.from(record);
           map.remove('is_synced');
-          recordsToPush.add(map);
-        }
+          return map;
+        }).toList();
 
-        // Upsert ke Supabase
         await supabase.from(table).upsert(recordsToPush);
 
-        // Jika sukses, update SQLite is_synced = 1
-        for (var record in unsynced) {
-          await db.update(
-            table,
-            {'is_synced': 1},
-            where: 'id = ?',
-            whereArgs: [record['id']],
-          );
+        for (final record in unsynced) {
+          await db.update(table, {'is_synced': 1}, where: 'id = ?', whereArgs: [record['id']]);
         }
       } catch (e) {
-        print("Gagal push tabel $table: $e");
+        debugPrint('Gagal push tabel $table: $e');
       }
     }
+    // Settings TIDAK di-push di sini.
+    // Settings hanya di-push saat user klik "Simpan Perubahan" via pushSettings().
   }
 
-  Future<void> _pullData() async {
-    // Sebagai MVP: kita mendownload tabel Products dan Users dari Cloud ke lokal
-    // (karena admin bisa tambah menu/user dari perangkat lain)
+  Future<void> _pullData({bool pullSettings = false}) async {
     final db = await _db.database;
 
     try {
-      final products = await supabase.from('products').select();
-      for (var p in products) {
-        p['is_synced'] = 1; // Tandai sudah tersinkronisasi
-        await db.insert('products', p, conflictAlgorithm: ConflictAlgorithm.replace);
+      const tables = ['products', 'users', 'transactions', 'transaction_details', 'shifts', 'expenses'];
+      for (final table in tables) {
+        final records = await supabase.from(table).select();
+        for (final record in records) {
+          record['is_synced'] = 1;
+          await db.insert(table, record, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
       }
 
-      final users = await supabase.from('users').select();
-      for (var u in users) {
-        u['is_synced'] = 1;
-        await db.insert('users', u, conflictAlgorithm: ConflictAlgorithm.replace);
+      if (pullSettings) {
+        final settingsRecords = await supabase.from('settings').select();
+        for (final record in settingsRecords) {
+          await db.insert('settings', record, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
       }
-      
-      // Opsional: Pull Settings, Expenses, dll.
     } catch (e) {
-      print("Gagal pull data: $e");
+      debugPrint('Gagal pull data: $e');
     }
   }
 }

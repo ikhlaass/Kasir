@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import '../models/transaction_model.dart';
-import '../models/product_model.dart';
 import 'database_helper.dart';
 
 class PrinterService {
@@ -162,15 +160,15 @@ class PrinterService {
     // Total
     final totalStr = _fc(transaction.totalHarga);
     final totalSpace = 32 - 'Total:'.length - totalStr.length;
-    bytes += generator.text('Total:' + (' ' * totalSpace) + totalStr, styles: PosStyles(bold: true));
+    bytes += generator.text('Total:${' ' * totalSpace}$totalStr', styles: PosStyles(bold: true));
 
     final dibayarStr = _fc(dibayar);
     final bayarSpace = 32 - 'Dibayar:'.length - dibayarStr.length;
-    bytes += generator.text('Dibayar:' + (' ' * bayarSpace) + dibayarStr);
+    bytes += generator.text('Dibayar:${' ' * bayarSpace}$dibayarStr');
 
     final kembaliStr = _fc(kembalian);
     final kembaliSpace = 32 - 'Kembali:'.length - kembaliStr.length;
-    bytes += generator.text('Kembali:' + (' ' * kembaliSpace) + kembaliStr);
+    bytes += generator.text('Kembali:${' ' * kembaliSpace}$kembaliStr');
 
     bytes += generator.emptyLines(1);
     bytes += generator.text('Terima Kasih', styles: PosStyles(align: PosAlign.center, bold: true));

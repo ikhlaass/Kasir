@@ -123,11 +123,12 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
       bytes += generator.text('TEST PRINTER BERHASIL!', styles: PosStyles(align: PosAlign.center, bold: true));
       bytes += generator.emptyLines(2);
       await PrintBluetoothThermal.writeBytes(bytes);
-      
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Test print dikirim.'), backgroundColor: AppColors.success),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Test print gagal: $e'), backgroundColor: AppColors.error),
       );
@@ -135,7 +136,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     if (!_printerService.isSupported) {
       return Scaffold(
         appBar: AppBar(title: Text('Pengaturan Printer', style: AppFonts.poppins(fontWeight: FontWeight.w600))),
@@ -213,7 +214,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: _testPrint,
-                  icon: const Icon(Icons.receipt_long),
+                  icon: Icon(Icons.receipt_long),
                   label: Text('Test Print', style: AppFonts.poppins()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
@@ -238,16 +239,16 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
                     ? Center(child: Text('Tidak ada perangkat ditemukan.\nPastikan bluetooth menyala dan printer sudah di-pairing.', textAlign: TextAlign.center, style: AppFonts.poppins(color: AppColors.textMedium)))
                     : ListView.separated(
                         itemCount: _devices.length,
-                        separatorBuilder: (c, i) => const Divider(),
+                        separatorBuilder: (c, i) => Divider(),
                         itemBuilder: (ctx, i) {
                           final dev = _devices[i];
                           final isThisConnected = _isConnected && _savedMac == dev.macAdress;
                           return ListTile(
-                            leading: const Icon(Icons.bluetooth),
+                            leading: Icon(Icons.bluetooth),
                             title: Text(dev.name, style: AppFonts.poppins(fontWeight: FontWeight.w500)),
                             subtitle: Text(dev.macAdress, style: AppFonts.poppins(fontSize: 11)),
                             trailing: isThisConnected
-                                ? const Icon(Icons.check_circle, color: AppColors.success)
+                                ? Icon(Icons.check_circle, color: AppColors.success)
                                 : TextButton(
                                     onPressed: () => _connectToDevice(dev),
                                     child: Text('Konek', style: AppFonts.poppins()),
@@ -262,7 +263,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
           ? FloatingActionButton.extended(
               heroTag: 'scan_bt',
               onPressed: _scanDevices,
-              icon: const Icon(Icons.search),
+              icon: Icon(Icons.search),
               label: Text('Cari Ulang', style: AppFonts.poppins()),
             )
           : null,

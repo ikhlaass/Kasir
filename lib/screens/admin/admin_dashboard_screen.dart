@@ -40,7 +40,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     // Adaptive: sidebar ≥ 700px, bottom bar < 700px
     return LayoutBuilder(
       builder: (ctx, constraints) {
@@ -65,7 +65,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           // Sidebar
           Container(
             width: 220,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.surface,
               border: Border(right: BorderSide(color: AppColors.border, width: 1)),
             ),
@@ -83,7 +83,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           color: AppColors.primary,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.blur_on_rounded, color: Colors.white, size: 20),
+                        child: Icon(Icons.blur_on_rounded, color: Colors.white, size: 20),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -152,7 +152,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       child: Row(
                         children: [
-                          const Icon(Icons.point_of_sale_outlined, color: AppColors.textMedium, size: 18),
+                          Icon(Icons.point_of_sale_outlined, color: AppColors.textMedium, size: 18),
                           const SizedBox(width: 12),
                           Text('Buka Kasir (POS)', style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textMedium)),
                         ],
@@ -221,7 +221,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       backgroundColor: AppColors.background,
       body: body,
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.surface,
           border: Border(top: BorderSide(color: AppColors.border, width: 1)),
         ),
@@ -422,7 +422,7 @@ class _DashboardTabState extends State<_DashboardTab> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: RefreshIndicator(
@@ -478,6 +478,19 @@ class _DashboardTabState extends State<_DashboardTab> {
       automaticallyImplyLeading: false,
       backgroundColor: AppColors.background,
       surfaceTintColor: Colors.transparent,
+      actions: [
+        IconButton(
+          icon: Icon(
+            ThemeManager.isDark.value ? Icons.light_mode : Icons.dark_mode,
+            color: AppColors.warning,
+          ),
+          onPressed: () {
+            ThemeManager.isDark.value = !ThemeManager.isDark.value;
+          },
+          tooltip: 'Ganti Tema',
+        ),
+        const SizedBox(width: 8),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
@@ -586,7 +599,7 @@ class _DashboardTabState extends State<_DashboardTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
-            const Icon(Icons.account_balance_outlined, color: AppColors.textMedium, size: 18),
+            Icon(Icons.account_balance_outlined, color: AppColors.textMedium, size: 18),
             const SizedBox(width: 8),
             Text('Laba Bersih Hari Ini', style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
           ]),
@@ -652,7 +665,7 @@ class _DashboardTabState extends State<_DashboardTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(children: [
-                const Icon(Icons.track_changes_outlined, color: AppColors.textMedium, size: 18),
+                Icon(Icons.track_changes_outlined, color: AppColors.textMedium, size: 18),
                 const SizedBox(width: 8),
                 Text('Target Harian',
                     style: AppFonts.poppins(color: AppColors.textDark, fontSize: 14, fontWeight: FontWeight.w600)),
@@ -885,7 +898,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                           value: pct,
                           minHeight: 4,
                           backgroundColor: AppColors.background,
-                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.textMedium),
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.textMedium),
                         ),
                       ),
                     ),
@@ -934,10 +947,12 @@ class _DashboardTabState extends State<_DashboardTab> {
                 children: [
                   Text('Bulan Lalu', style: AppFonts.poppins(fontSize: 12, color: AppColors.textMedium)),
                   const SizedBox(height: 4),
-                  Row(
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 8,
+                    runSpacing: 4,
                     children: [
                       Text(_fcFull(lastRev), style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
@@ -945,6 +960,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(revIsUp ? Icons.arrow_upward : Icons.arrow_downward,
                                 size: 12, color: revIsUp ? AppColors.success : AppColors.error),
@@ -1051,7 +1067,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(6)),
-                  child: const Icon(Icons.wallet_rounded, size: 16, color: AppColors.textMedium),
+                  child: Icon(Icons.wallet_rounded, size: 16, color: AppColors.textMedium),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -1086,7 +1102,7 @@ class _KpiCard extends StatelessWidget {
   const _KpiCard({required this.data});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1130,7 +1146,7 @@ class _SectionCard extends StatelessWidget {
   const _SectionCard({required this.title, required this.icon, required this.child});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -1156,7 +1172,7 @@ class _EmptyInfo extends StatelessWidget {
   const _EmptyInfo(this.message);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Center(child: Text(message, style: AppFonts.poppins(color: AppColors.textLight, fontSize: 13))),
