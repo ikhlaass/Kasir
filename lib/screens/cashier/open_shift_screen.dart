@@ -27,14 +27,17 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final startingCash = double.parse(_amountCtrl.text.replaceAll(RegExp(r'[^0-9]'), ''));
+      final startingCash = double.parse(
+        _amountCtrl.text.replaceAll(RegExp(r'[^0-9]'), ''),
+      );
       final now = DateTime.now().toIso8601String();
 
       final shift = ShiftModel(
         userId: widget.user.id!,
         startTime: now,
         startingCash: startingCash,
-        expectedCash: startingCash, // Awal shift, uang yang diharapkan sama dengan modal
+        expectedCash:
+            startingCash, // Awal shift, uang yang diharapkan sama dengan modal
       );
 
       await _db.openShift(shift);
@@ -46,7 +49,10 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: $e'), backgroundColor: AppColors.error),
+        SnackBar(
+          content: Text('Terjadi kesalahan: $e'),
+          backgroundColor: AppColors.error,
+        ),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -54,7 +60,8 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
@@ -67,7 +74,11 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 10)),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
               ],
             ),
             child: Form(
@@ -78,19 +89,28 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
                 children: [
                   Center(
                     child: Container(
-                      width: 64, height: 64,
+                      width: 64,
+                      height: 64,
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.point_of_sale, color: AppColors.primary, size: 32),
+                      child: Icon(
+                        Icons.point_of_sale,
+                        color: AppColors.primary,
+                        size: 32,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   Center(
                     child: Text(
                       'Buka Shift Kasir',
-                      style: AppFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                      style: AppFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -98,26 +118,48 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
                     child: Text(
                       'Halo, ${widget.user.username}! Silakan masukkan modal awal / uang kembalian di laci.',
                       textAlign: TextAlign.center,
-                      style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
+                      style: AppFonts.poppins(
+                        fontSize: 13,
+                        color: AppColors.textMedium,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 32),
-                  Text('Modal Awal Laci (Rp)', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                  Text(
+                    'Modal Awal Laci (Rp)',
+                    style: AppFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textDark,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _amountCtrl,
                     keyboardType: TextInputType.number,
-                    style: AppFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: AppFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                     decoration: InputDecoration(
                       prefixText: 'Rp ',
-                      prefixStyle: AppFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                      prefixStyle: AppFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                      ),
                       filled: true,
                       fillColor: AppColors.background,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     validator: (v) {
                       if (v == null || v.isEmpty) return 'Wajib diisi';
-                      final val = double.tryParse(v.replaceAll(RegExp(r'[^0-9]'), ''));
+                      final val = double.tryParse(
+                        v.replaceAll(RegExp(r'[^0-9]'), ''),
+                      );
                       if (val == null) return 'Angka tidak valid';
                       return null;
                     },
@@ -130,11 +172,20 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
                       onPressed: _isLoading ? null : _submit,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : Text('Mulai Berjualan', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                          : Text(
+                              'Mulai Berjualan',
+                              style: AppFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ],

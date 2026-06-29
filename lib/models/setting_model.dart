@@ -17,8 +17,9 @@ class SettingModel {
 
 /// Kunci-kunci yang digunakan di tabel settings
 class SettingKeys {
-  static const String namaToko       = 'nama_toko';
-  static const String alamatToko     = 'alamat_toko';
-  static const String teleponToko    = 'telepon_toko';
-  static const String deskripsiToko  = 'deskripsi_toko';
+  static const String namaToko = 'nama_toko';
+  static const String alamatToko = 'alamat_toko';
+  static const String teleponToko = 'telepon_toko';
+  static const String deskripsiToko = 'deskripsi_toko';
+  static const String qrisPath = 'qris_path';
 }

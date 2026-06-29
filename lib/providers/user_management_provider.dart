@@ -37,17 +37,17 @@ class UserManagementProvider with ChangeNotifier {
     if (exists) return 'Username "$username" sudah digunakan';
 
     try {
-      final id = await _db.insertUser(UserModel(
-        username: username.trim(),
-        password: password,
-        role: 'kasir',
-      ));
-      _kasirList.add(UserModel(
-        id: id,
-        username: username.trim(),
-        password: password,
-        role: 'kasir',
-      ));
+      final id = await _db.insertUser(
+        UserModel(username: username.trim(), password: password, role: 'kasir'),
+      );
+      _kasirList.add(
+        UserModel(
+          id: id,
+          username: username.trim(),
+          password: password,
+          role: 'kasir',
+        ),
+      );
       notifyListeners();
       SupabaseService().syncData();
       return null;

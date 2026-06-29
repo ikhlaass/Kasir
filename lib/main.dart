@@ -93,9 +93,7 @@ class KasirApp extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           elevation: 0,
         ),
       ),
@@ -124,15 +122,10 @@ class KasirApp extends StatelessWidget {
           side: BorderSide(color: AppColors.border, width: 1),
         ),
       ),
-      dividerTheme: DividerThemeData(
-        color: AppColors.divider,
-        space: 1,
-      ),
+      dividerTheme: DividerThemeData(color: AppColors.divider, space: 1),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         contentTextStyle: AppFonts.poppins(),
       ),
     );

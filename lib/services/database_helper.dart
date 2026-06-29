@@ -52,13 +52,19 @@ class DatabaseHelper {
     }
     if (oldVersion < 3) {
       try {
-        await db.execute('ALTER TABLE products ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1');
+        await db.execute(
+          'ALTER TABLE products ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1',
+        );
       } catch (_) {}
     }
     if (oldVersion < 4) {
       try {
-        await db.execute('ALTER TABLE transactions ADD COLUMN status TEXT NOT NULL DEFAULT "completed"');
-        await db.execute('ALTER TABLE transactions ADD COLUMN nama_pelanggan TEXT');
+        await db.execute(
+          'ALTER TABLE transactions ADD COLUMN status TEXT NOT NULL DEFAULT "completed"',
+        );
+        await db.execute(
+          'ALTER TABLE transactions ADD COLUMN nama_pelanggan TEXT',
+        );
       } catch (_) {}
     }
     if (oldVersion < 5) {
@@ -74,7 +80,9 @@ class DatabaseHelper {
     }
     if (oldVersion < 6) {
       try {
-        await db.execute('ALTER TABLE transaction_details ADD COLUMN catatan TEXT');
+        await db.execute(
+          'ALTER TABLE transaction_details ADD COLUMN catatan TEXT',
+        );
       } catch (_) {}
     }
     if (oldVersion < 7) {
@@ -84,11 +92,21 @@ class DatabaseHelper {
     }
     if (oldVersion < 8) {
       try {
-        await db.execute('ALTER TABLE products ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0');
-        await db.execute('ALTER TABLE transactions ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0');
-        await db.execute('ALTER TABLE transaction_details ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0');
-        await db.execute('ALTER TABLE expenses ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0');
-        await db.execute('ALTER TABLE users ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0');
+        await db.execute(
+          'ALTER TABLE products ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0',
+        );
+        await db.execute(
+          'ALTER TABLE transactions ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0',
+        );
+        await db.execute(
+          'ALTER TABLE transaction_details ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0',
+        );
+        await db.execute(
+          'ALTER TABLE expenses ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0',
+        );
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0',
+        );
       } catch (_) {}
     }
     if (oldVersion < 9) {
@@ -197,27 +215,52 @@ class DatabaseHelper {
   }
 
   Future<void> _insertDefaultData(Database db) async {
-    await db.insert('users', {'username': 'admin',  'password': 'admin123', 'role': 'admin'});
-    await db.insert('users', {'username': 'kasir',  'password': 'kasir123', 'role': 'kasir'});
+    await db.insert('users', {
+      'username': 'admin',
+      'password': 'admin123',
+      'role': 'admin',
+    });
+    await db.insert('users', {
+      'username': 'kasir',
+      'password': 'kasir123',
+      'role': 'kasir',
+    });
 
-    await db.insert('products', {'nama_menu': 'Nasi Goreng Biasa',   'harga': 15000, 'kategori': 'Nasi Goreng', 'is_active': 1});
-    await db.insert('products', {'nama_menu': 'Nasi Goreng Spesial', 'harga': 20000, 'kategori': 'Nasi Goreng', 'is_active': 1});
-    await db.insert('products', {'nama_menu': 'Nasi Goreng Seafood', 'harga': 25000, 'kategori': 'Nasi Goreng', 'is_active': 1});
+    await db.insert('products', {
+      'nama_menu': 'Nasi Goreng Biasa',
+      'harga': 15000,
+      'kategori': 'Nasi Goreng',
+      'is_active': 1,
+    });
+    await db.insert('products', {
+      'nama_menu': 'Nasi Goreng Spesial',
+      'harga': 20000,
+      'kategori': 'Nasi Goreng',
+      'is_active': 1,
+    });
+    await db.insert('products', {
+      'nama_menu': 'Nasi Goreng Seafood',
+      'harga': 25000,
+      'kategori': 'Nasi Goreng',
+      'is_active': 1,
+    });
 
     await _insertDefaultSettings(db);
   }
 
   Future<void> _insertDefaultSettings(Database db) async {
     final defaults = {
-      SettingKeys.namaToko:      'Nasi Goreng Pak Budi',
-      SettingKeys.alamatToko:    'Jl. Makan Enak No. 1',
-      SettingKeys.teleponToko:   '0812-3456-7890',
+      SettingKeys.namaToko: 'Nasi Goreng Pak Budi',
+      SettingKeys.alamatToko: 'Jl. Makan Enak No. 1',
+      SettingKeys.teleponToko: '0812-3456-7890',
       SettingKeys.deskripsiToko: 'Nasi Goreng Lezat & Terjangkau',
-      'target_harian':           '500000',
+      'target_harian': '500000',
     };
     for (final entry in defaults.entries) {
-      await db.insert('settings', {'key': entry.key, 'value': entry.value},
-          conflictAlgorithm: ConflictAlgorithm.ignore);
+      await db.insert('settings', {
+        'key': entry.key,
+        'value': entry.value,
+      }, conflictAlgorithm: ConflictAlgorithm.ignore);
     }
   }
 
@@ -227,17 +270,24 @@ class DatabaseHelper {
 
   Future<UserModel?> login(String username, String password) async {
     final db = await database;
-    final maps = await db.query('users',
-        where: 'username = ? AND password = ?',
-        whereArgs: [username, password],
-        limit: 1);
+    final maps = await db.query(
+      'users',
+      where: 'username = ? AND password = ?',
+      whereArgs: [username, password],
+      limit: 1,
+    );
     if (maps.isEmpty) return null;
     return UserModel.fromMap(maps.first);
   }
 
   Future<List<UserModel>> getAllKasir() async {
     final db = await database;
-    final maps = await db.query('users', where: 'role = ?', whereArgs: ['kasir'], orderBy: 'username ASC');
+    final maps = await db.query(
+      'users',
+      where: 'role = ?',
+      whereArgs: ['kasir'],
+      orderBy: 'username ASC',
+    );
     return maps.map((m) => UserModel.fromMap(m)).toList();
   }
 
@@ -248,7 +298,12 @@ class DatabaseHelper {
 
   Future<int> updateUserPassword(int userId, String newPassword) async {
     final db = await database;
-    return await db.update('users', {'password': newPassword, 'is_synced': 0}, where: 'id = ?', whereArgs: [userId]);
+    return await db.update(
+      'users',
+      {'password': newPassword, 'is_synced': 0},
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
   }
 
   Future<int> deleteUser(int id) async {
@@ -256,12 +311,21 @@ class DatabaseHelper {
     try {
       await SupabaseService().supabase.from('users').delete().eq('id', id);
     } catch (_) {}
-    return await db.delete('users', where: 'id = ? AND role = ?', whereArgs: [id, 'kasir']);
+    return await db.delete(
+      'users',
+      where: 'id = ? AND role = ?',
+      whereArgs: [id, 'kasir'],
+    );
   }
 
   Future<bool> isUsernameExists(String username) async {
     final db = await database;
-    final result = await db.query('users', where: 'username = ?', whereArgs: [username], limit: 1);
+    final result = await db.query(
+      'users',
+      where: 'username = ?',
+      whereArgs: [username],
+      limit: 1,
+    );
     return result.isNotEmpty;
   }
 
@@ -303,16 +367,24 @@ class DatabaseHelper {
     final db = await database;
     final map = product.toMap();
     map['is_synced'] = 0;
-    int res = await db.update('products', map,
-        where: 'id = ?', whereArgs: [product.id]);
+    int res = await db.update(
+      'products',
+      map,
+      where: 'id = ?',
+      whereArgs: [product.id],
+    );
     SupabaseService().syncData();
     return res;
   }
 
   Future<int> toggleProductActive(int id, bool isActive) async {
     final db = await database;
-    int res = await db.update('products', {'is_active': isActive ? 1 : 0, 'is_synced': 0},
-        where: 'id = ?', whereArgs: [id]);
+    int res = await db.update(
+      'products',
+      {'is_active': isActive ? 1 : 0, 'is_synced': 0},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     SupabaseService().syncData();
     return res;
   }
@@ -342,10 +414,19 @@ class DatabaseHelper {
       } else {
         final map = transaction.toMap();
         map['is_synced'] = 0;
-        await txn.update('transactions', map, where: 'id = ?', whereArgs: [transaction.id]);
-        await txn.delete('transaction_details', where: 'id_transaksi = ?', whereArgs: [transaction.id]);
+        await txn.update(
+          'transactions',
+          map,
+          where: 'id = ?',
+          whereArgs: [transaction.id],
+        );
+        await txn.delete(
+          'transaction_details',
+          where: 'id_transaksi = ?',
+          whereArgs: [transaction.id],
+        );
       }
-      
+
       for (final detail in details) {
         final detailMap = detail.toMap();
         detailMap['id_transaksi'] = transactionId;
@@ -360,26 +441,46 @@ class DatabaseHelper {
   Future<void> deleteTransaction(int transactionId) async {
     final db = await database;
     try {
-      await SupabaseService().supabase.from('transactions').delete().eq('id', transactionId);
+      await SupabaseService().supabase
+          .from('transactions')
+          .delete()
+          .eq('id', transactionId);
     } catch (_) {}
-    await db.delete('transactions', where: 'id = ?', whereArgs: [transactionId]);
+    await db.delete(
+      'transactions',
+      where: 'id = ?',
+      whereArgs: [transactionId],
+    );
   }
 
   Future<List<TransactionModel>> getActiveOrders() async {
     final db = await database;
-    final maps = await db.query('transactions', where: "status IN ('pending', 'active')", orderBy: 'id DESC');
+    final maps = await db.query(
+      'transactions',
+      where: "status IN ('pending', 'active')",
+      orderBy: 'id DESC',
+    );
     return maps.map((m) => TransactionModel.fromMap(m)).toList();
   }
 
   Future<void> completeTransaction(int transactionId) async {
     final db = await database;
-    await db.update('transactions', {'status': 'completed', 'is_synced': 0}, where: 'id = ?', whereArgs: [transactionId]);
+    await db.update(
+      'transactions',
+      {'status': 'completed', 'is_synced': 0},
+      where: 'id = ?',
+      whereArgs: [transactionId],
+    );
     SupabaseService().syncData();
   }
 
   Future<List<TransactionModel>> getAllTransactions() async {
     final db = await database;
-    final maps = await db.query('transactions', where: "status = 'completed'", orderBy: 'id DESC');
+    final maps = await db.query(
+      'transactions',
+      where: "status = 'completed'",
+      orderBy: 'id DESC',
+    );
     return maps.map((m) => TransactionModel.fromMap(m)).toList();
   }
 
@@ -393,29 +494,42 @@ class DatabaseHelper {
         whereClause = "tanggal_waktu LIKE '$today%'";
         break;
       case 'week':
-        final weekAgo = now.subtract(const Duration(days: 7)).toIso8601String().substring(0, 10);
+        final weekAgo = now
+            .subtract(const Duration(days: 7))
+            .toIso8601String()
+            .substring(0, 10);
         whereClause = "tanggal_waktu >= '$weekAgo'";
         break;
       case 'month':
-        final monthStart = '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
+        final monthStart =
+            '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
         whereClause = "tanggal_waktu >= '$monthStart'";
         break;
       default:
         whereClause = "1=1";
     }
     whereClause += " AND status IN ('active', 'completed')";
-    final maps = await db.query('transactions', where: whereClause, orderBy: 'id DESC');
+    final maps = await db.query(
+      'transactions',
+      where: whereClause,
+      orderBy: 'id DESC',
+    );
     return maps.map((m) => TransactionModel.fromMap(m)).toList();
   }
 
-  Future<List<TransactionDetailModel>> getTransactionDetails(int transactionId) async {
+  Future<List<TransactionDetailModel>> getTransactionDetails(
+    int transactionId,
+  ) async {
     final db = await database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT td.*, p.nama_menu
       FROM transaction_details td
       JOIN products p ON td.id_produk = p.id
       WHERE td.id_transaksi = ?
-    ''', [transactionId]);
+    ''',
+      [transactionId],
+    );
     return maps.map((m) => TransactionDetailModel.fromMap(m)).toList();
   }
 
@@ -427,8 +541,9 @@ class DatabaseHelper {
     final db = await database;
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final result = await db.rawQuery(
-        "SELECT COALESCE(SUM(total_harga), 0) AS total FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
-        ['$today%']);
+      "SELECT COALESCE(SUM(total_harga), 0) AS total FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
+      ['$today%'],
+    );
     return (result.first['total'] as num).toDouble();
   }
 
@@ -436,8 +551,9 @@ class DatabaseHelper {
     final db = await database;
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final result = await db.rawQuery(
-        "SELECT COUNT(*) AS count FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
-        ['$today%']);
+      "SELECT COUNT(*) AS count FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
+      ['$today%'],
+    );
     return (result.first['count'] as num).toInt();
   }
 
@@ -445,8 +561,9 @@ class DatabaseHelper {
     final db = await database;
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final result = await db.rawQuery(
-        "SELECT COALESCE(AVG(total_harga), 0) AS avg FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
-        ['$today%']);
+      "SELECT COALESCE(AVG(total_harga), 0) AS avg FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
+      ['$today%'],
+    );
     return (result.first['avg'] as num).toDouble();
   }
 
@@ -454,14 +571,15 @@ class DatabaseHelper {
     final db = await database;
     final result = <Map<String, dynamic>>[];
     for (int i = 6; i >= 0; i--) {
-      final date    = DateTime.now().subtract(Duration(days: i));
+      final date = DateTime.now().subtract(Duration(days: i));
       final dateStr = date.toIso8601String().substring(0, 10);
       final rows = await db.rawQuery(
-          "SELECT COALESCE(SUM(total_harga), 0) AS total FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
-          ['$dateStr%']);
+        "SELECT COALESCE(SUM(total_harga), 0) AS total FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu LIKE ?",
+        ['$dateStr%'],
+      );
       result.add({
-        'date':  dateStr,
-        'day':   _dayName(date.weekday),
+        'date': dateStr,
+        'day': _dayName(date.weekday),
         'total': (rows.first['total'] as num).toDouble(),
       });
     }
@@ -473,9 +591,12 @@ class DatabaseHelper {
     return days[wd - 1];
   }
 
-  Future<List<Map<String, dynamic>>> getTopSellingProducts({int limit = 5}) async {
+  Future<List<Map<String, dynamic>>> getTopSellingProducts({
+    int limit = 5,
+  }) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT p.nama_menu, SUM(td.qty) AS total_qty, SUM(td.subtotal) AS total_revenue
       FROM transaction_details td
       JOIN products p ON td.id_produk = p.id
@@ -484,7 +605,9 @@ class DatabaseHelper {
       GROUP BY td.id_produk
       ORDER BY total_qty DESC
       LIMIT ?
-    ''', [limit]);
+    ''',
+      [limit],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getPaymentMethodStats() async {
@@ -529,23 +652,32 @@ class DatabaseHelper {
 
   Future<String> getSetting(String key, {String defaultValue = ''}) async {
     final db = await database;
-    final maps = await db.query('settings', where: 'key = ?', whereArgs: [key], limit: 1);
+    final maps = await db.query(
+      'settings',
+      where: 'key = ?',
+      whereArgs: [key],
+      limit: 1,
+    );
     if (maps.isEmpty) return defaultValue;
     return maps.first['value'] as String;
   }
 
   Future<void> setSetting(String key, String value) async {
     final db = await database;
-    await db.insert('settings', {'key': key, 'value': value},
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert('settings', {
+      'key': key,
+      'value': value,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> saveAllSettings(Map<String, String> settings) async {
     final db = await database;
     final batch = db.batch();
     for (final entry in settings.entries) {
-      batch.insert('settings', {'key': entry.key, 'value': entry.value},
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      batch.insert('settings', {
+        'key': entry.key,
+        'value': entry.value,
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
     }
     await batch.commit(noResult: true);
   }
@@ -589,7 +721,12 @@ class DatabaseHelper {
 
   Future<List<ExpenseModel>> getExpensesByDate(String date) async {
     final db = await database;
-    final maps = await db.query('expenses', where: "tanggal LIKE ?", whereArgs: ['$date%'], orderBy: 'id DESC');
+    final maps = await db.query(
+      'expenses',
+      where: "tanggal LIKE ?",
+      whereArgs: ['$date%'],
+      orderBy: 'id DESC',
+    );
     return maps.map((m) => ExpenseModel.fromMap(m)).toList();
   }
 
@@ -603,17 +740,25 @@ class DatabaseHelper {
         whereClause = "tanggal LIKE '$today%'";
         break;
       case 'week':
-        final weekAgo = now.subtract(const Duration(days: 7)).toIso8601String().substring(0, 10);
+        final weekAgo = now
+            .subtract(const Duration(days: 7))
+            .toIso8601String()
+            .substring(0, 10);
         whereClause = "tanggal >= '$weekAgo'";
         break;
       case 'month':
-        final monthStart = '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
+        final monthStart =
+            '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
         whereClause = "tanggal >= '$monthStart'";
         break;
       default:
         whereClause = '1=1';
     }
-    final maps = await db.query('expenses', where: whereClause, orderBy: 'tanggal DESC');
+    final maps = await db.query(
+      'expenses',
+      where: whereClause,
+      orderBy: 'tanggal DESC',
+    );
     return maps.map((m) => ExpenseModel.fromMap(m)).toList();
   }
 
@@ -621,8 +766,9 @@ class DatabaseHelper {
     final db = await database;
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final result = await db.rawQuery(
-        "SELECT COALESCE(SUM(jumlah), 0) AS total FROM expenses WHERE tanggal LIKE ?",
-        ['$today%']);
+      "SELECT COALESCE(SUM(jumlah), 0) AS total FROM expenses WHERE tanggal LIKE ?",
+      ['$today%'],
+    );
     return (result.first['total'] as num).toDouble();
   }
 
@@ -635,24 +781,31 @@ class DatabaseHelper {
     final now = DateTime.now();
 
     // Bulan ini
-    final thisMonthStart = '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
+    final thisMonthStart =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
     final thisMonthRevResult = await db.rawQuery(
-        "SELECT COALESCE(SUM(total_harga), 0) AS total, COUNT(*) AS count FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu >= ?",
-        [thisMonthStart]);
+      "SELECT COALESCE(SUM(total_harga), 0) AS total, COUNT(*) AS count FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu >= ?",
+      [thisMonthStart],
+    );
     final thisMonthExpResult = await db.rawQuery(
-        "SELECT COALESCE(SUM(jumlah), 0) AS total FROM expenses WHERE tanggal >= ?",
-        [thisMonthStart]);
+      "SELECT COALESCE(SUM(jumlah), 0) AS total FROM expenses WHERE tanggal >= ?",
+      [thisMonthStart],
+    );
 
     // Bulan lalu
     final lastMonth = DateTime(now.year, now.month - 1, 1);
-    final lastMonthStart = '${lastMonth.year}-${lastMonth.month.toString().padLeft(2, '0')}-01';
-    final lastMonthEnd = '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
+    final lastMonthStart =
+        '${lastMonth.year}-${lastMonth.month.toString().padLeft(2, '0')}-01';
+    final lastMonthEnd =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
     final lastMonthRevResult = await db.rawQuery(
-        "SELECT COALESCE(SUM(total_harga), 0) AS total, COUNT(*) AS count FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu >= ? AND tanggal_waktu < ?",
-        [lastMonthStart, lastMonthEnd]);
+      "SELECT COALESCE(SUM(total_harga), 0) AS total, COUNT(*) AS count FROM transactions WHERE status IN ('active', 'completed') AND tanggal_waktu >= ? AND tanggal_waktu < ?",
+      [lastMonthStart, lastMonthEnd],
+    );
     final lastMonthExpResult = await db.rawQuery(
-        "SELECT COALESCE(SUM(jumlah), 0) AS total FROM expenses WHERE tanggal >= ? AND tanggal < ?",
-        [lastMonthStart, lastMonthEnd]);
+      "SELECT COALESCE(SUM(jumlah), 0) AS total FROM expenses WHERE tanggal >= ? AND tanggal < ?",
+      [lastMonthStart, lastMonthEnd],
+    );
 
     final thisRevenue = (thisMonthRevResult.first['total'] as num).toDouble();
     final thisOrders = (thisMonthRevResult.first['count'] as num).toInt();
@@ -670,8 +823,12 @@ class DatabaseHelper {
       'lastOrders': lastOrders,
       'lastExpenses': lastExpenses,
       'lastProfit': lastRevenue - lastExpenses,
-      'revenueChange': lastRevenue > 0 ? ((thisRevenue - lastRevenue) / lastRevenue * 100) : 0.0,
-      'ordersChange': lastOrders > 0 ? ((thisOrders - lastOrders) / lastOrders * 100) : 0.0,
+      'revenueChange': lastRevenue > 0
+          ? ((thisRevenue - lastRevenue) / lastRevenue * 100)
+          : 0.0,
+      'ordersChange': lastOrders > 0
+          ? ((thisOrders - lastOrders) / lastOrders * 100)
+          : 0.0,
     };
   }
 
@@ -679,10 +836,13 @@ class DatabaseHelper {
   // LEAST SELLING PRODUCTS (Menu Tidak Laku)
   // ═══════════════════════════════════════════════════════════════════════
 
-  Future<List<Map<String, dynamic>>> getLeastSellingProducts({int limit = 5}) async {
+  Future<List<Map<String, dynamic>>> getLeastSellingProducts({
+    int limit = 5,
+  }) async {
     final db = await database;
     // Produk aktif yang paling sedikit terjual (termasuk 0)
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT p.id, p.nama_menu, p.kategori, COALESCE(SUM(td.qty), 0) AS total_qty
       FROM products p
       LEFT JOIN transaction_details td ON p.id = td.id_produk
@@ -691,7 +851,9 @@ class DatabaseHelper {
       GROUP BY p.id
       ORDER BY total_qty ASC
       LIMIT ?
-    ''', [limit]);
+    ''',
+      [limit],
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -701,7 +863,8 @@ class DatabaseHelper {
   Future<int> getActiveOrderCount() async {
     final db = await database;
     final result = await db.rawQuery(
-        "SELECT COUNT(*) AS count FROM transactions WHERE status IN ('pending', 'active')");
+      "SELECT COUNT(*) AS count FROM transactions WHERE status IN ('pending', 'active')",
+    );
     return (result.first['count'] as num).toInt();
   }
 
@@ -711,10 +874,12 @@ class DatabaseHelper {
 
   Future<ShiftModel?> getActiveShift(int userId) async {
     final db = await database;
-    final maps = await db.query('shifts',
-        where: 'user_id = ? AND status = ?',
-        whereArgs: [userId, 'open'],
-        limit: 1);
+    final maps = await db.query(
+      'shifts',
+      where: 'user_id = ? AND status = ?',
+      whereArgs: [userId, 'open'],
+      limit: 1,
+    );
     if (maps.isEmpty) return null;
     return ShiftModel.fromMap(maps.first);
   }
@@ -732,7 +897,12 @@ class DatabaseHelper {
     final db = await database;
     final map = shift.toMap();
     map['is_synced'] = 0;
-    int id = await db.update('shifts', map, where: 'id = ?', whereArgs: [shift.id]);
+    int id = await db.update(
+      'shifts',
+      map,
+      where: 'id = ?',
+      whereArgs: [shift.id],
+    );
     SupabaseService().syncData();
     return id;
   }
@@ -746,9 +916,13 @@ class DatabaseHelper {
     SupabaseService().syncData();
   }
 
-  Future<void> addKasirExpense(double amount, String description, int shiftId) async {
+  Future<void> addKasirExpense(
+    double amount,
+    String description,
+    int shiftId,
+  ) async {
     final db = await database;
-    
+
     // 1. Tambah pengeluaran ke tabel expenses
     await db.insert('expenses', {
       'tanggal': DateTime.now().toIso8601String(),
@@ -757,14 +931,14 @@ class DatabaseHelper {
       'jumlah': amount,
       'is_synced': 0,
     });
-    
+
     // 2. Kurangi estimasi kas di tabel shifts
     // Karena mengurangi, amountToAdd bernilai negatif
     await db.rawUpdate(
       'UPDATE shifts SET expected_cash = expected_cash - ?, is_synced = 0 WHERE id = ?',
       [amount, shiftId],
     );
-    
+
     SupabaseService().syncData();
   }
 }

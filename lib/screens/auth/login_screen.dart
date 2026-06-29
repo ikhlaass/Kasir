@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final user = await _dbHelper.login(username, password);
-      
+
       if (!mounted) return;
 
       if (user != null) {
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // Cek apakah ada shift yang sedang open
           final activeShift = await _dbHelper.getActiveShift(user.id!);
           if (!mounted) return;
-          
+
           if (activeShift == null) {
             Navigator.pushReplacement(
               context,
@@ -96,7 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: IconButton(
@@ -142,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Welcome text
                   Center(
                     child: Column(
@@ -168,9 +169,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  
+
                   // Form fields
-                  Text('Username', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.textDark)),
+                  Text(
+                    'Username',
+                    style: AppFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textDark,
+                    ),
+                  ),
                   const SizedBox(height: 6),
                   TextField(
                     key: const Key('username_field'),
@@ -181,8 +189,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  
-                  Text('Password', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.textDark)),
+
+                  Text(
+                    'Password',
+                    style: AppFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textDark,
+                    ),
+                  ),
                   const SizedBox(height: 6),
                   TextField(
                     key: const Key('password_field'),
@@ -193,7 +208,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
                           color: AppColors.textMedium,
                         ),
                         onPressed: () {
@@ -206,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onSubmitted: (_) => _login(),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Login button
                   SizedBox(
                     width: double.infinity,
@@ -220,7 +237,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
                             )
                           : Text(

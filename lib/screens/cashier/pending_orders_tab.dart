@@ -11,7 +11,11 @@ class PendingOrdersTab extends StatefulWidget {
   final VoidCallback onEdit;
   final Function(TransactionModel, List<TransactionDetailModel>) onPay;
 
-  const PendingOrdersTab({super.key, required this.onEdit, required this.onPay});
+  const PendingOrdersTab({
+    super.key,
+    required this.onEdit,
+    required this.onPay,
+  });
 
   @override
   State<PendingOrdersTab> createState() => _PendingOrdersTabState();
@@ -54,7 +58,11 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
 
   void _editOrder(TransactionModel trx) {
     final details = _detailsCache[trx.id!] ?? [];
-    context.read<CartProvider>().loadTransaction(trx, details, context.read<ProductProvider>().products);
+    context.read<CartProvider>().loadTransaction(
+      trx,
+      details,
+      context.read<ProductProvider>().products,
+    );
     widget.onEdit();
   }
 
@@ -69,7 +77,10 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text('Selesaikan Pesanan?', style: AppFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
+        title: Text(
+          'Selesaikan Pesanan?',
+          style: AppFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
         content: Text(
           'Pesanan untuk "${trx.namaPelanggan ?? ''}" akan ditandai selesai (sudah diambil).',
           style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
@@ -77,7 +88,10 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Batal', style: AppFonts.poppins(color: AppColors.textMedium)),
+            child: Text(
+              'Batal',
+              style: AppFonts.poppins(color: AppColors.textMedium),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.success),
@@ -87,7 +101,10 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
               nav.pop();
               if (mounted) _loadOrders();
             },
-            child: Text('Selesaikan', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+            child: Text(
+              'Selesaikan',
+              style: AppFonts.poppins(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -100,7 +117,10 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text('Batalkan Pesanan?', style: AppFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
+        title: Text(
+          'Batalkan Pesanan?',
+          style: AppFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
         content: Text(
           'Hapus pesanan untuk "${trx.namaPelanggan ?? 'Tanpa Nama'}"?',
           style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
@@ -108,7 +128,10 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Batal', style: AppFonts.poppins(color: AppColors.textMedium)),
+            child: Text(
+              'Batal',
+              style: AppFonts.poppins(color: AppColors.textMedium),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
@@ -118,7 +141,10 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
               nav.pop();
               if (mounted) _loadOrders();
             },
-            child: Text('Hapus', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+            child: Text(
+              'Hapus',
+              style: AppFonts.poppins(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -126,7 +152,8 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     if (_isLoading) return const Center(child: CircularProgressIndicator());
 
     if (_orders.isEmpty) {
@@ -134,11 +161,24 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.receipt_long_outlined, size: 64, color: AppColors.textLight.withValues(alpha: 0.3)),
+            Icon(
+              Icons.receipt_long_outlined,
+              size: 64,
+              color: AppColors.textLight.withValues(alpha: 0.3),
+            ),
             const SizedBox(height: 16),
-            Text('Tidak ada pesanan aktif', style: AppFonts.poppins(fontSize: 16, color: AppColors.textMedium)),
+            Text(
+              'Tidak ada pesanan aktif',
+              style: AppFonts.poppins(
+                fontSize: 16,
+                color: AppColors.textMedium,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text('Pesanan yang sudah dibayar akan muncul di sini', style: AppFonts.poppins(fontSize: 12, color: AppColors.textLight)),
+            Text(
+              'Pesanan yang sudah dibayar akan muncul di sini',
+              style: AppFonts.poppins(fontSize: 12, color: AppColors.textLight),
+            ),
           ],
         ),
       );
@@ -151,19 +191,39 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 16),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            border: Border(bottom: BorderSide(color: AppColors.border, width: 1)),
+            border: Border(
+              bottom: BorderSide(color: AppColors.border, width: 1),
+            ),
           ),
           child: Row(
             children: [
-              Text('Daftar Pesanan', style: AppFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark, letterSpacing: -0.5)),
+              Text(
+                'Daftar Pesanan',
+                style: AppFonts.poppins(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                  letterSpacing: -0.5,
+                ),
+              ),
               const SizedBox(width: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text('${_orders.length} aktif', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                child: Text(
+                  '${_orders.length} aktif',
+                  style: AppFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
               const Spacer(),
               IconButton(
@@ -217,11 +277,14 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: (isPending ? AppColors.warning : AppColors.primary).withValues(alpha: 0.1),
+                    color: (isPending ? AppColors.warning : AppColors.primary)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    isPending ? Icons.hourglass_empty_outlined : Icons.restaurant_outlined,
+                    isPending
+                        ? Icons.hourglass_empty_outlined
+                        : Icons.restaurant_outlined,
                     color: isPending ? AppColors.warning : AppColors.primary,
                     size: 20,
                   ),
@@ -232,21 +295,39 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        trx.namaPelanggan?.isNotEmpty == true ? trx.namaPelanggan! : 'Pelanggan ${trx.id}',
-                        style: AppFonts.poppins(fontWeight: FontWeight.bold, fontSize: 15),
+                        trx.namaPelanggan?.isNotEmpty == true
+                            ? trx.namaPelanggan!
+                            : 'Pelanggan ${trx.id}',
+                        style: AppFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                       ),
                       const SizedBox(height: 2),
-                      Text('Jam $time', style: AppFonts.poppins(fontSize: 12, color: AppColors.textMedium)),
+                      Text(
+                        'Jam $time',
+                        style: AppFonts.poppins(
+                          fontSize: 12,
+                          color: AppColors.textMedium,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 // Status badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
-                    color: (isPending ? AppColors.warning : AppColors.success).withValues(alpha: 0.1),
+                    color: (isPending ? AppColors.warning : AppColors.success)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: (isPending ? AppColors.warning : AppColors.success).withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: (isPending ? AppColors.warning : AppColors.success)
+                          .withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Text(
                     isPending ? 'Belum Bayar' : 'Diproses',
@@ -267,52 +348,91 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Detail Pesanan:', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textMedium)),
-                const SizedBox(height: 8),
-                ...details.map((d) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Icon(Icons.circle, size: 5, color: AppColors.textLight),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              d.namaMenu ?? 'Produk #${d.idProduk}',
-                              style: AppFonts.poppins(fontSize: 13, color: AppColors.textDark),
-                            ),
-                            if (d.catatan?.isNotEmpty == true)
-                              Text(
-                                'Catatan: ${d.catatan}',
-                                style: AppFonts.poppins(fontSize: 11, color: AppColors.primary).copyWith(fontStyle: FontStyle.italic),
-                              ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        'x${d.qty}',
-                        style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textMedium),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Rp ${d.subtotal.toInt()}',
-                        style: AppFonts.poppins(fontSize: 13, color: AppColors.textDark),
-                      ),
-                    ],
+                Text(
+                  'Detail Pesanan:',
+                  style: AppFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textMedium,
                   ),
-                )),
+                ),
+                const SizedBox(height: 8),
+                ...details.map(
+                  (d) => Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: Icon(
+                            Icons.circle,
+                            size: 5,
+                            color: AppColors.textLight,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                d.namaMenu ?? 'Produk #${d.idProduk}',
+                                style: AppFonts.poppins(
+                                  fontSize: 13,
+                                  color: AppColors.textDark,
+                                ),
+                              ),
+                              if (d.catatan?.isNotEmpty == true)
+                                Text(
+                                  'Catatan: ${d.catatan}',
+                                  style: AppFonts.poppins(
+                                    fontSize: 11,
+                                    color: AppColors.primary,
+                                  ).copyWith(fontStyle: FontStyle.italic),
+                                ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          'x${d.qty}',
+                          style: AppFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textMedium,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Rp ${d.subtotal.toInt()}',
+                          style: AppFonts.poppins(
+                            fontSize: 13,
+                            color: AppColors.textDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Divider(color: AppColors.border, height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Total', style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold)),
-                    Text('Rp ${trx.totalHarga.toInt()}', style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primary)),
+                    Text(
+                      'Total',
+                      style: AppFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Rp ${trx.totalHarga.toInt()}',
+                      style: AppFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -324,16 +444,35 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Row(
               children: [
-                _actionBtn(Icons.edit_outlined, 'Edit', AppColors.textDark, () => _editOrder(trx)),
+                _actionBtn(
+                  Icons.edit_outlined,
+                  'Edit',
+                  AppColors.textDark,
+                  () => _editOrder(trx),
+                ),
                 const SizedBox(width: 8),
-                _actionBtn(Icons.delete_outline, 'Hapus', AppColors.error, () => _deleteOrder(trx)),
+                _actionBtn(
+                  Icons.delete_outline,
+                  'Hapus',
+                  AppColors.error,
+                  () => _deleteOrder(trx),
+                ),
                 const Spacer(),
                 if (isPending)
                   ElevatedButton.icon(
                     icon: Icon(Icons.payment_outlined, size: 16),
-                    label: Text('Bayar', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600)),
+                    label: Text(
+                      'Bayar',
+                      style: AppFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                       minimumSize: Size.zero,
                     ),
                     onPressed: () => _payOrder(trx),
@@ -341,10 +480,19 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                 else
                   ElevatedButton.icon(
                     icon: Icon(Icons.check_circle_outline, size: 16),
-                    label: Text('Selesaikan', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600)),
+                    label: Text(
+                      'Selesaikan',
+                      style: AppFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.success,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                       minimumSize: Size.zero,
                     ),
                     onPressed: () => _completeOrder(trx),
@@ -357,7 +505,12 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
     );
   }
 
-  Widget _actionBtn(IconData icon, String label, Color color, VoidCallback onTap) {
+  Widget _actionBtn(
+    IconData icon,
+    String label,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(6),

@@ -42,10 +42,21 @@ class SupabaseService {
 
   Future<void> _pushUnsyncedData() async {
     final db = await _db.database;
-    const tables = ['users', 'products', 'transactions', 'transaction_details', 'expenses', 'shifts'];
+    const tables = [
+      'users',
+      'products',
+      'transactions',
+      'transaction_details',
+      'expenses',
+      'shifts',
+    ];
 
     for (final table in tables) {
-      final unsynced = await db.query(table, where: 'is_synced = ?', whereArgs: [0]);
+      final unsynced = await db.query(
+        table,
+        where: 'is_synced = ?',
+        whereArgs: [0],
+      );
       if (unsynced.isEmpty) continue;
 
       try {
@@ -58,7 +69,12 @@ class SupabaseService {
         await supabase.from(table).upsert(recordsToPush);
 
         for (final record in unsynced) {
-          await db.update(table, {'is_synced': 1}, where: 'id = ?', whereArgs: [record['id']]);
+          await db.update(
+            table,
+            {'is_synced': 1},
+            where: 'id = ?',
+            whereArgs: [record['id']],
+          );
         }
       } catch (e) {
         debugPrint('Gagal push tabel $table: $e');
@@ -72,19 +88,34 @@ class SupabaseService {
     final db = await _db.database;
 
     try {
-      const tables = ['products', 'users', 'transactions', 'transaction_details', 'shifts', 'expenses'];
+      const tables = [
+        'products',
+        'users',
+        'transactions',
+        'transaction_details',
+        'shifts',
+        'expenses',
+      ];
       for (final table in tables) {
         final records = await supabase.from(table).select();
         for (final record in records) {
           record['is_synced'] = 1;
-          await db.insert(table, record, conflictAlgorithm: ConflictAlgorithm.replace);
+          await db.insert(
+            table,
+            record,
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
         }
       }
 
       if (pullSettings) {
         final settingsRecords = await supabase.from('settings').select();
         for (final record in settingsRecords) {
-          await db.insert('settings', record, conflictAlgorithm: ConflictAlgorithm.replace);
+          await db.insert(
+            'settings',
+            record,
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
         }
       }
     } catch (e) {

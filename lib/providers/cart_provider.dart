@@ -24,8 +24,7 @@ class CartProvider with ChangeNotifier {
 
   List<CartItem> get items => _items;
 
-  double get totalHarga =>
-      _items.fold(0, (sum, item) => sum + item.subtotal);
+  double get totalHarga => _items.fold(0, (sum, item) => sum + item.subtotal);
 
   int get totalItems => _items.fold(0, (sum, item) => sum + item.qty);
 
@@ -75,14 +74,20 @@ class CartProvider with ChangeNotifier {
   }
 
   // ─── Load dari pending transaction (Edit) ───────────────────────────────
-  void loadTransaction(TransactionModel trx, List<TransactionDetailModel> details, List<ProductModel> products) {
+  void loadTransaction(
+    TransactionModel trx,
+    List<TransactionDetailModel> details,
+    List<ProductModel> products,
+  ) {
     _items.clear();
     activeTransactionId = trx.id;
     activeCustomerName = trx.namaPelanggan;
     for (final detail in details) {
       try {
         final p = products.firstWhere((prod) => prod.id == detail.idProduk);
-        _items.add(CartItem(product: p, qty: detail.qty, catatan: detail.catatan));
+        _items.add(
+          CartItem(product: p, qty: detail.qty, catatan: detail.catatan),
+        );
       } catch (e) {
         // Produk mungkin sudah terhapus, lewati atau tangani
       }
@@ -109,12 +114,14 @@ class CartProvider with ChangeNotifier {
     );
 
     final details = _items
-        .map((item) => TransactionDetailModel(
-              idTransaksi: 0, // akan di-set di DatabaseHelper
-              idProduk: item.product.id!,
-              qty: item.qty,
-              subtotal: item.subtotal,
-            ))
+        .map(
+          (item) => TransactionDetailModel(
+            idTransaksi: 0, // akan di-set di DatabaseHelper
+            idProduk: item.product.id!,
+            qty: item.qty,
+            subtotal: item.subtotal,
+          ),
+        )
         .toList();
 
     final transactionId = await _db.saveTransaction(transaction, details);

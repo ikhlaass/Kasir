@@ -32,24 +32,28 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
     final isEdit = product != null;
     final nameCtrl = TextEditingController(text: product?.namaMenu ?? '');
     final priceCtrl = TextEditingController(
-        text: product != null ? product.harga.toInt().toString() : '');
+      text: product != null ? product.harga.toInt().toString() : '',
+    );
     final provider = context.read<ProductProvider>();
-    final availableCategories = provider.products.map((p) => p.kategori).toSet().toList();
+    final availableCategories = provider.products
+        .map((p) => p.kategori)
+        .toSet()
+        .toList();
     availableCategories.removeWhere((c) => c.toLowerCase() == 'extra topping');
     availableCategories.sort();
     availableCategories.add('Extra Topping');
     availableCategories.add('Tambah Kategori Baru...');
 
     String initialCategory = product?.kategori ?? 'Nasi Goreng';
-    
+
     if (!availableCategories.contains(initialCategory)) {
       availableCategories.insert(0, initialCategory);
     }
-    
+
     final categoryCtrl = TextEditingController(text: initialCategory);
     bool isCustomCategory = false;
     final formKey = GlobalKey<FormState>();
-    
+
     String? currentImagePath = product?.imagePath;
 
     showDialog(
@@ -67,16 +71,24 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(isEdit ? 'Edit Menu' : 'Tambah Menu Baru',
-                          style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                      Text(
+                        isEdit ? 'Edit Menu' : 'Tambah Menu Baru',
+                        style: AppFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                        ),
+                      ),
                       const SizedBox(height: 20),
-                      
+
                       // Area Pilih Gambar
                       Center(
                         child: InkWell(
                           onTap: () async {
                             final picker = ImagePicker();
-                            final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                            final pickedFile = await picker.pickImage(
+                              source: ImageSource.gallery,
+                            );
                             if (pickedFile != null) {
                               setDialogState(() {
                                 currentImagePath = pickedFile.path;
@@ -90,21 +102,41 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                             decoration: BoxDecoration(
                               color: AppColors.surface,
                               borderRadius: BorderRadius.circular(16),
-                              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4))],
-                              image: currentImagePath != null && File(currentImagePath!).existsSync()
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.04),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                              image:
+                                  currentImagePath != null &&
+                                      File(currentImagePath!).existsSync()
                                   ? DecorationImage(
                                       image: FileImage(File(currentImagePath!)),
                                       fit: BoxFit.cover,
                                     )
                                   : null,
                             ),
-                            child: currentImagePath == null || !File(currentImagePath!).existsSync()
+                            child:
+                                currentImagePath == null ||
+                                    !File(currentImagePath!).existsSync()
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.add_a_photo_outlined, size: 32, color: AppColors.textMedium),
+                                      Icon(
+                                        Icons.add_a_photo_outlined,
+                                        size: 32,
+                                        color: AppColors.textMedium,
+                                      ),
                                       const SizedBox(height: 4),
-                                      Text('Foto', style: AppFonts.poppins(fontSize: 11, color: AppColors.textMedium)),
+                                      Text(
+                                        'Foto',
+                                        style: AppFonts.poppins(
+                                          fontSize: 11,
+                                          color: AppColors.textMedium,
+                                        ),
+                                      ),
                                     ],
                                   )
                                 : null,
@@ -114,8 +146,15 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                       if (currentImagePath != null)
                         Center(
                           child: TextButton(
-                            onPressed: () => setDialogState(() => currentImagePath = null),
-                            child: Text('Hapus Foto', style: AppFonts.poppins(color: AppColors.error, fontSize: 11)),
+                            onPressed: () =>
+                                setDialogState(() => currentImagePath = null),
+                            child: Text(
+                              'Hapus Foto',
+                              style: AppFonts.poppins(
+                                color: AppColors.error,
+                                fontSize: 11,
+                              ),
+                            ),
                           ),
                         ),
                       const SizedBox(height: 16),
@@ -132,7 +171,9 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                         key: const Key('input_harga_menu'),
                         controller: priceCtrl,
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         decoration: _dialogInputDecoration(label: 'Harga (Rp)'),
                         validator: (val) =>
                             val == null || val.isEmpty ? 'Wajib diisi' : null,
@@ -147,10 +188,19 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                           items: availableCategories.map((cat) {
                             return DropdownMenuItem(
                               value: cat,
-                              child: Text(cat == 'Tambah Kategori Baru...' ? '+ $cat' : cat,
-                                  style: AppFonts.poppins(
-                                      color: cat == 'Tambah Kategori Baru...' ? AppColors.primary : AppColors.textDark,
-                                      fontWeight: cat == 'Tambah Kategori Baru...' ? FontWeight.bold : FontWeight.normal)),
+                              child: Text(
+                                cat == 'Tambah Kategori Baru...'
+                                    ? '+ $cat'
+                                    : cat,
+                                style: AppFonts.poppins(
+                                  color: cat == 'Tambah Kategori Baru...'
+                                      ? AppColors.primary
+                                      : AppColors.textDark,
+                                  fontWeight: cat == 'Tambah Kategori Baru...'
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                              ),
                             );
                           }).toList(),
                           onChanged: (val) {
@@ -170,8 +220,13 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                             Expanded(
                               child: TextFormField(
                                 controller: categoryCtrl,
-                                decoration: _dialogInputDecoration(label: 'Nama Kategori Baru'),
-                                validator: (val) => val == null || val.trim().isEmpty ? 'Wajib diisi' : null,
+                                decoration: _dialogInputDecoration(
+                                  label: 'Nama Kategori Baru',
+                                ),
+                                validator: (val) =>
+                                    val == null || val.trim().isEmpty
+                                    ? 'Wajib diisi'
+                                    : null,
                               ),
                             ),
                             IconButton(
@@ -179,10 +234,13 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                               onPressed: () {
                                 setDialogState(() {
                                   isCustomCategory = false;
-                                  categoryCtrl.text = availableCategories.firstWhere((c) => c != 'Tambah Kategori Baru...');
+                                  categoryCtrl.text = availableCategories
+                                      .firstWhere(
+                                        (c) => c != 'Tambah Kategori Baru...',
+                                      );
                                 });
                               },
-                            )
+                            ),
                           ],
                         ),
                       const SizedBox(height: 24),
@@ -191,24 +249,35 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                         children: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx),
-                            child: Text('Batal',
-                                style: AppFonts.poppins(color: AppColors.textMedium)),
+                            child: Text(
+                              'Batal',
+                              style: AppFonts.poppins(
+                                color: AppColors.textMedium,
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 8),
                           ElevatedButton(
                             key: const Key('btn_simpan_menu'),
                             onPressed: () async {
                               if (!formKey.currentState!.validate()) return;
-                              
+
                               String? savedImagePath = currentImagePath;
                               // Jika image baru dipilih (ada di temporary dir), copy ke app docs
-                              if (currentImagePath != null && currentImagePath != product?.imagePath) {
+                              if (currentImagePath != null &&
+                                  currentImagePath != product?.imagePath) {
                                 try {
-                                  final appDir = await getApplicationDocumentsDirectory();
-                                  final fileName = p.basename(currentImagePath!);
+                                  final appDir =
+                                      await getApplicationDocumentsDirectory();
+                                  final fileName = p.basename(
+                                    currentImagePath!,
+                                  );
                                   // Tambah timestamp agar unik
-                                  final uniqueName = '${DateTime.now().millisecondsSinceEpoch}_$fileName';
-                                  final savedImage = await File(currentImagePath!).copy(p.join(appDir.path, uniqueName));
+                                  final uniqueName =
+                                      '${DateTime.now().millisecondsSinceEpoch}_$fileName';
+                                  final savedImage = await File(
+                                    currentImagePath!,
+                                  ).copy(p.join(appDir.path, uniqueName));
                                   savedImagePath = savedImage.path;
                                 } catch (e) {
                                   debugPrint('Gagal menyimpan gambar: $e');
@@ -234,8 +303,12 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 
                               if (ctx.mounted) Navigator.pop(ctx);
                             },
-                            child: Text('Simpan',
-                                style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+                            child: Text(
+                              'Simpan',
+                              style: AppFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -243,7 +316,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                   ),
                 ),
               );
-            }
+            },
           ),
         ),
       ),
@@ -256,19 +329,25 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text('Hapus Menu?',
-            style: AppFonts.poppins(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: AppColors.textDark)),
+        title: Text(
+          'Hapus Menu?',
+          style: AppFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: AppColors.textDark,
+          ),
+        ),
         content: Text(
-            'Apakah Anda yakin ingin menghapus "${product.namaMenu}"? Data tidak dapat dikembalikan.',
-            style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium)),
+          'Apakah Anda yakin ingin menghapus "${product.namaMenu}"? Data tidak dapat dikembalikan.',
+          style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Batal',
-                style: AppFonts.poppins(color: AppColors.textMedium)),
+            child: Text(
+              'Batal',
+              style: AppFonts.poppins(color: AppColors.textMedium),
+            ),
           ),
           ElevatedButton(
             key: const Key('btn_confirm_delete'),
@@ -277,8 +356,10 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
               await context.read<ProductProvider>().deleteProduct(product.id!);
               if (ctx.mounted) Navigator.pop(ctx);
             },
-            child: Text('Hapus',
-                style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+            child: Text(
+              'Hapus',
+              style: AppFonts.poppins(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -286,12 +367,18 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kelola Menu',
-            style: AppFonts.poppins(
-                fontWeight: FontWeight.w600, fontSize: 18, letterSpacing: -0.5)),
+        title: Text(
+          'Kelola Menu',
+          style: AppFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            letterSpacing: -0.5,
+          ),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(color: AppColors.border, height: 1),
@@ -302,12 +389,15 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
         heroTag: 'add_product_hero_tag',
         onPressed: () => _showProductDialog(),
         icon: Icon(Icons.add),
-        label: Text('Menu Baru',
-            style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+        label: Text(
+          'Menu Baru',
+          style: AppFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         elevation: 0,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: AppColors.primary, width: 1)),
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: AppColors.primary, width: 1),
+        ),
       ),
       body: Consumer<ProductProvider>(
         builder: (context, provider, child) {
@@ -320,8 +410,11 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.restaurant_menu_outlined,
-                      size: 48, color: AppColors.textLight.withValues(alpha: 0.5)),
+                  Icon(
+                    Icons.restaurant_menu_outlined,
+                    size: 48,
+                    color: AppColors.textLight.withValues(alpha: 0.5),
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Belum ada menu',
@@ -388,7 +481,9 @@ class _ProductCard extends StatelessWidget {
   });
 
   String _formatCurrency(double amount) {
-    final formatted = amount.toStringAsFixed(0).replaceAllMapped(
+    final formatted = amount
+        .toStringAsFixed(0)
+        .replaceAllMapped(
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (m) => '${m[1]}.',
         );
@@ -396,7 +491,8 @@ class _ProductCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     final inactive = !product.isActive;
     return Opacity(
       opacity: inactive ? 0.6 : 1.0,
@@ -405,7 +501,13 @@ class _ProductCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: inactive ? AppColors.background : AppColors.surface,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4))],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -426,16 +528,22 @@ class _ProductCard extends StatelessWidget {
                       if (inactive) ...[
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.textLight.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text('NONAKTIF',
-                              style: AppFonts.poppins(
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textLight)),
+                          child: Text(
+                            'NONAKTIF',
+                            style: AppFonts.poppins(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textLight,
+                            ),
+                          ),
                         ),
                       ],
                     ],
@@ -451,7 +559,14 @@ class _ProductCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Container(width: 4, height: 4, decoration: BoxDecoration(color: AppColors.border, shape: BoxShape.circle)),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.border,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         _formatCurrency(product.harga),

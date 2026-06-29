@@ -24,11 +24,19 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int _selectedIndex = 0;
 
   static const _navItems = [
-    _NavItem(Icons.grid_view_outlined,       Icons.grid_view_rounded,          'Dashboard'),
-    _NavItem(Icons.restaurant_menu_outlined,  Icons.restaurant_menu_rounded,    'Menu'),
-    _NavItem(Icons.analytics_outlined,        Icons.analytics_rounded,          'Laporan'),
-    _NavItem(Icons.account_balance_wallet_outlined, Icons.account_balance_wallet, 'Pengeluaran'),
-    _NavItem(Icons.tune_outlined,             Icons.tune_rounded,               'Pengaturan'),
+    _NavItem(Icons.grid_view_outlined, Icons.grid_view_rounded, 'Dashboard'),
+    _NavItem(
+      Icons.restaurant_menu_outlined,
+      Icons.restaurant_menu_rounded,
+      'Menu',
+    ),
+    _NavItem(Icons.analytics_outlined, Icons.analytics_rounded, 'Laporan'),
+    _NavItem(
+      Icons.account_balance_wallet_outlined,
+      Icons.account_balance_wallet,
+      'Pengeluaran',
+    ),
+    _NavItem(Icons.tune_outlined, Icons.tune_rounded, 'Pengaturan'),
   ];
 
   List<Widget> get _pages => [
@@ -40,7 +48,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     // Adaptive: sidebar ≥ 700px, bottom bar < 700px
     return LayoutBuilder(
       builder: (ctx, constraints) {
@@ -67,7 +76,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             width: 220,
             decoration: BoxDecoration(
               color: AppColors.surface,
-              border: Border(right: BorderSide(color: AppColors.border, width: 1)),
+              border: Border(
+                right: BorderSide(color: AppColors.border, width: 1),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,17 +89,28 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   child: Row(
                     children: [
                       Container(
-                        width: 32, height: 32,
+                        width: 32,
+                        height: 32,
                         decoration: BoxDecoration(
                           color: AppColors.primary,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.blur_on_rounded, color: Colors.white, size: 20),
+                        child: Icon(
+                          Icons.blur_on_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text('Admin Panel',
-                            style: AppFonts.poppins(color: AppColors.textDark, fontSize: 16, fontWeight: FontWeight.w700)),
+                        child: Text(
+                          'Admin Panel',
+                          style: AppFonts.poppins(
+                            color: AppColors.textDark,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -101,21 +123,31 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   final item = _navItems[i];
                   final selected = _selectedIndex == i;
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 2,
+                    ),
                     child: InkWell(
                       onTap: () => setState(() => _selectedIndex = i),
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
-                          color: selected ? AppColors.background : Colors.transparent,
+                          color: selected
+                              ? AppColors.background
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           children: [
                             Icon(
                               selected ? item.activeIcon : item.icon,
-                              color: selected ? AppColors.primary : AppColors.textLight,
+                              color: selected
+                                  ? AppColors.primary
+                                  : AppColors.textLight,
                               size: 18,
                             ),
                             const SizedBox(width: 12),
@@ -123,8 +155,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               item.label,
                               style: AppFonts.poppins(
                                 fontSize: 13,
-                                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                                color: selected ? AppColors.textDark : AppColors.textLight,
+                                fontWeight: selected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                                color: selected
+                                    ? AppColors.textDark
+                                    : AppColors.textLight,
                               ),
                             ),
                           ],
@@ -142,19 +178,41 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 const SizedBox(height: 8),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 2,
+                  ),
                   child: InkWell(
                     onTap: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => CashierScreen(user: widget.user)));
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CashierScreen(user: widget.user),
+                        ),
+                      );
                     },
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                       child: Row(
                         children: [
-                          Icon(Icons.point_of_sale_outlined, color: AppColors.textMedium, size: 18),
+                          Icon(
+                            Icons.point_of_sale_outlined,
+                            color: AppColors.textMedium,
+                            size: 18,
+                          ),
                           const SizedBox(width: 12),
-                          Text('Buka Kasir (POS)', style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textMedium)),
+                          Text(
+                            'Buka Kasir (POS)',
+                            style: AppFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textMedium,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -171,20 +229,33 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     decoration: BoxDecoration(
                       color: AppColors.surface,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4))],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Row(
                       children: [
                         Container(
-                          width: 32, height: 32,
+                          width: 32,
+                          height: 32,
                           decoration: BoxDecoration(
                             color: AppColors.primaryLight,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Center(
                             child: Text(
-                              widget.user.username.substring(0, 1).toUpperCase(),
-                              style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                              widget.user.username
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                              style: AppFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -193,10 +264,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(widget.user.username,
-                                  style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark),
-                                  overflow: TextOverflow.ellipsis),
-                              Text('Owner', style: AppFonts.poppins(fontSize: 11, color: AppColors.textLight)),
+                              Text(
+                                widget.user.username,
+                                style: AppFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textDark,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Owner',
+                                style: AppFonts.poppins(
+                                  fontSize: 11,
+                                  color: AppColors.textLight,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -231,29 +314,48 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(_navItems.length, (i) {
-                final item  = _navItems[i];
+                final item = _navItems[i];
                 final selected = _selectedIndex == i;
                 return Expanded(
                   child: GestureDetector(
                     onTap: () => setState(() => _selectedIndex = i),
                     behavior: HitTestBehavior.opaque,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
-                        color: selected ? AppColors.background : Colors.transparent,
+                        color: selected
+                            ? AppColors.background
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(selected ? item.activeIcon : item.icon, color: selected ? AppColors.primary : AppColors.textLight, size: 20),
+                          Icon(
+                            selected ? item.activeIcon : item.icon,
+                            color: selected
+                                ? AppColors.primary
+                                : AppColors.textLight,
+                            size: 20,
+                          ),
                           const SizedBox(height: 4),
                           Flexible(
                             child: Text(
                               item.label,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppFonts.poppins(fontSize: 10, fontWeight: selected ? FontWeight.w600 : FontWeight.normal, color: selected ? AppColors.textDark : AppColors.textLight),
+                              style: AppFonts.poppins(
+                                fontSize: 10,
+                                fontWeight: selected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                                color: selected
+                                    ? AppColors.textDark
+                                    : AppColors.textLight,
+                              ),
                             ),
                           ),
                         ],
@@ -291,18 +393,18 @@ class _DashboardTab extends StatefulWidget {
 class _DashboardTabState extends State<_DashboardTab> {
   final _db = DatabaseHelper();
 
-  double _todayRevenue  = 0;
-  int    _todayOrders   = 0;
-  double _avgTrx        = 0;
-  double _targetHarian  = 500000;
+  double _todayRevenue = 0;
+  int _todayOrders = 0;
+  double _avgTrx = 0;
+  double _targetHarian = 500000;
   double _todayExpenses = 0;
-  int    _activeOrderCount = 0;
+  int _activeOrderCount = 0;
   Map<String, dynamic> _monthlyData = {};
-  List<Map<String, dynamic>> _weeklyData      = [];
-  List<Map<String, dynamic>> _topSellers      = [];
-  List<Map<String, dynamic>> _leastSellers    = [];
-  List<Map<String, dynamic>> _paymentStats    = [];
-  List<Map<String, dynamic>> _peakHours       = [];
+  List<Map<String, dynamic>> _weeklyData = [];
+  List<Map<String, dynamic>> _topSellers = [];
+  List<Map<String, dynamic>> _leastSellers = [];
+  List<Map<String, dynamic>> _paymentStats = [];
+  List<Map<String, dynamic>> _peakHours = [];
   bool _loading = true;
 
   @override
@@ -334,18 +436,18 @@ class _DashboardTabState extends State<_DashboardTab> {
     ]);
     if (mounted) {
       setState(() {
-        _todayRevenue    = results[0] as double;
-        _todayOrders     = results[1] as int;
-        _avgTrx          = results[2] as double;
-        _weeklyData      = List<Map<String, dynamic>>.from(results[3] as List);
-        _topSellers      = List<Map<String, dynamic>>.from(results[4] as List);
-        _paymentStats    = List<Map<String, dynamic>>.from(results[5] as List);
-        _peakHours       = List<Map<String, dynamic>>.from(results[6] as List);
-        _targetHarian    = results[7] as double;
-        _todayExpenses   = results[8] as double;
+        _todayRevenue = results[0] as double;
+        _todayOrders = results[1] as int;
+        _avgTrx = results[2] as double;
+        _weeklyData = List<Map<String, dynamic>>.from(results[3] as List);
+        _topSellers = List<Map<String, dynamic>>.from(results[4] as List);
+        _paymentStats = List<Map<String, dynamic>>.from(results[5] as List);
+        _peakHours = List<Map<String, dynamic>>.from(results[6] as List);
+        _targetHarian = results[7] as double;
+        _todayExpenses = results[8] as double;
         _activeOrderCount = results[9] as int;
-        _monthlyData     = results[10] as Map<String, dynamic>;
-        _leastSellers    = List<Map<String, dynamic>>.from(results[11] as List);
+        _monthlyData = results[10] as Map<String, dynamic>;
+        _leastSellers = List<Map<String, dynamic>>.from(results[11] as List);
         _loading = false;
       });
     }
@@ -353,13 +455,17 @@ class _DashboardTabState extends State<_DashboardTab> {
 
   String _fc(double v) {
     if (v >= 1000000) return 'Rp ${(v / 1000000).toStringAsFixed(1)}jt';
-    if (v >= 1000)    return 'Rp ${(v / 1000).toStringAsFixed(0)}rb';
+    if (v >= 1000) return 'Rp ${(v / 1000).toStringAsFixed(0)}rb';
     return 'Rp ${v.toStringAsFixed(0)}';
   }
 
   String _fcFull(double v) {
-    final s = v.toStringAsFixed(0).replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+    final s = v
+        .toStringAsFixed(0)
+        .replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]}.',
+        );
     return 'Rp $s';
   }
 
@@ -380,39 +486,64 @@ class _DashboardTabState extends State<_DashboardTab> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Target Harian',
-                    style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                Text(
+                  'Target Harian',
+                  style: AppFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                  ),
+                ),
                 const SizedBox(height: 6),
-                Text('Set target pendapatan harian Anda.',
-                    style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium)),
+                Text(
+                  'Set target pendapatan harian Anda.',
+                  style: AppFonts.poppins(
+                    fontSize: 13,
+                    color: AppColors.textMedium,
+                  ),
+                ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: ctrl,
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: const InputDecoration(labelText: 'Target (Rp)', prefixIcon: Icon(Icons.payments_outlined)),
-                  validator: (v) => (v == null || v.isEmpty || double.tryParse(v) == null)
-                      ? 'Nilai tidak valid' : null,
+                  decoration: const InputDecoration(
+                    labelText: 'Target (Rp)',
+                    prefixIcon: Icon(Icons.payments_outlined),
+                  ),
+                  validator: (v) =>
+                      (v == null || v.isEmpty || double.tryParse(v) == null)
+                      ? 'Nilai tidak valid'
+                      : null,
                 ),
                 const SizedBox(height: 24),
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: Text('Batal', style: AppFonts.poppins(color: AppColors.textMedium)),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (!formKey.currentState!.validate()) return;
-                      final val = double.parse(ctrl.text);
-                      await _db.setTargetHarian(val);
-                      if (!ctx.mounted) return;
-                      Navigator.pop(ctx);
-                      setState(() => _targetHarian = val);
-                    },
-                    child: Text('Simpan', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
-                  ),
-                ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(
+                        'Batal',
+                        style: AppFonts.poppins(color: AppColors.textMedium),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (!formKey.currentState!.validate()) return;
+                        final val = double.parse(ctrl.text);
+                        await _db.setTargetHarian(val);
+                        if (!ctx.mounted) return;
+                        Navigator.pop(ctx);
+                        setState(() => _targetHarian = val);
+                      },
+                      child: Text(
+                        'Simpan',
+                        style: AppFonts.poppins(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -422,7 +553,8 @@ class _DashboardTabState extends State<_DashboardTab> {
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: RefreshIndicator(
@@ -432,7 +564,9 @@ class _DashboardTabState extends State<_DashboardTab> {
           slivers: [
             _buildHeader(),
             if (_loading)
-              const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
+              const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              )
             else
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
@@ -471,7 +605,11 @@ class _DashboardTabState extends State<_DashboardTab> {
   // ── Header ──────────────────────────────────────────────────────────────
   Widget _buildHeader() {
     final hour = DateTime.now().hour;
-    final greeting = hour < 12 ? 'Selamat Pagi' : hour < 17 ? 'Selamat Siang' : 'Selamat Malam';
+    final greeting = hour < 12
+        ? 'Selamat Pagi'
+        : hour < 17
+        ? 'Selamat Siang'
+        : 'Selamat Malam';
     return SliverAppBar(
       expandedHeight: 120,
       pinned: true,
@@ -498,10 +636,23 @@ class _DashboardTabState extends State<_DashboardTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('$greeting,', style: AppFonts.poppins(color: AppColors.textMedium, fontSize: 13)),
+              Text(
+                '$greeting,',
+                style: AppFonts.poppins(
+                  color: AppColors.textMedium,
+                  fontSize: 13,
+                ),
+              ),
               const SizedBox(height: 2),
-              Text(widget.user.username,
-                  style: AppFonts.poppins(color: AppColors.textDark, fontSize: 24, fontWeight: FontWeight.w700, letterSpacing: -0.5)),
+              Text(
+                widget.user.username,
+                style: AppFonts.poppins(
+                  color: AppColors.textDark,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
+                ),
+              ),
             ],
           ),
         ),
@@ -511,12 +662,14 @@ class _DashboardTabState extends State<_DashboardTab> {
 
   // ── KPI Grid ────────────────────────────────────────────────────────────
   Widget _buildKpiGrid() {
-    final topMenu = _topSellers.isNotEmpty ? _topSellers.first['nama_menu'] as String : '-';
+    final topMenu = _topSellers.isNotEmpty
+        ? _topSellers.first['nama_menu'] as String
+        : '-';
     final kpis = [
-      _KpiData('Pendapatan',    _fc(_todayRevenue),   Icons.payments_outlined),
-      _KpiData('Pesanan',       '$_todayOrders trx',  Icons.receipt_long_outlined),
-      _KpiData('Rata-rata',     _fc(_avgTrx),         Icons.trending_up_rounded),
-      _KpiData('Menu Terlaris', topMenu,               Icons.emoji_events_outlined),
+      _KpiData('Pendapatan', _fc(_todayRevenue), Icons.payments_outlined),
+      _KpiData('Pesanan', '$_todayOrders trx', Icons.receipt_long_outlined),
+      _KpiData('Rata-rata', _fc(_avgTrx), Icons.trending_up_rounded),
+      _KpiData('Menu Terlaris', topMenu, Icons.emoji_events_outlined),
     ];
     final screenWidth = MediaQuery.of(context).size.width;
     final aspectRatio = screenWidth < 400 ? 1.1 : 1.4;
@@ -544,9 +697,21 @@ class _DashboardTabState extends State<_DashboardTab> {
             ? AppColors.warning.withValues(alpha: 0.06)
             : AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: _activeOrderCount > 0 
-            ? [BoxShadow(color: AppColors.warning.withValues(alpha: 0.1), blurRadius: 12, offset: const Offset(0, 4))]
-            : [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: _activeOrderCount > 0
+            ? [
+                BoxShadow(
+                  color: AppColors.warning.withValues(alpha: 0.1),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Row(
         children: [
@@ -556,16 +721,33 @@ class _DashboardTabState extends State<_DashboardTab> {
               color: AppColors.warning.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(Icons.pending_actions_outlined, color: AppColors.warning, size: 24),
+            child: Icon(
+              Icons.pending_actions_outlined,
+              color: AppColors.warning,
+              size: 24,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Pesanan Aktif Saat Ini', style: AppFonts.poppins(fontSize: 12, color: AppColors.textMedium)),
+                Text(
+                  'Pesanan Aktif Saat Ini',
+                  style: AppFonts.poppins(
+                    fontSize: 12,
+                    color: AppColors.textMedium,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text('$_activeOrderCount pesanan', style: AppFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                Text(
+                  '$_activeOrderCount pesanan',
+                  style: AppFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                  ),
+                ),
               ],
             ),
           ),
@@ -576,7 +758,14 @@ class _DashboardTabState extends State<_DashboardTab> {
                 color: AppColors.warning,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text('LIVE', style: AppFonts.poppins(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white)),
+              child: Text(
+                'LIVE',
+                style: AppFonts.poppins(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
         ],
       ),
@@ -593,16 +782,35 @@ class _DashboardTabState extends State<_DashboardTab> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [
-            Icon(Icons.account_balance_outlined, color: AppColors.textMedium, size: 18),
-            const SizedBox(width: 8),
-            Text('Laba Bersih Hari Ini', style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-          ]),
+          Row(
+            children: [
+              Icon(
+                Icons.account_balance_outlined,
+                color: AppColors.textMedium,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Laba Bersih Hari Ini',
+                style: AppFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textDark,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -610,30 +818,78 @@ class _DashboardTabState extends State<_DashboardTab> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Omzet', style: AppFonts.poppins(fontSize: 11, color: AppColors.textMedium)),
-                    Text(_fcFull(_todayRevenue), style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.success)),
+                    Text(
+                      'Omzet',
+                      style: AppFonts.poppins(
+                        fontSize: 11,
+                        color: AppColors.textMedium,
+                      ),
+                    ),
+                    Text(
+                      _fcFull(_todayRevenue),
+                      style: AppFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.success,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Text('—', style: AppFonts.poppins(fontSize: 16, color: AppColors.textLight)),
+              Text(
+                '—',
+                style: AppFonts.poppins(
+                  fontSize: 16,
+                  color: AppColors.textLight,
+                ),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Pengeluaran', style: AppFonts.poppins(fontSize: 11, color: AppColors.textMedium)),
-                    Text(_fcFull(_todayExpenses), style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.error)),
+                    Text(
+                      'Pengeluaran',
+                      style: AppFonts.poppins(
+                        fontSize: 11,
+                        color: AppColors.textMedium,
+                      ),
+                    ),
+                    Text(
+                      _fcFull(_todayExpenses),
+                      style: AppFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.error,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Text('=', style: AppFonts.poppins(fontSize: 16, color: AppColors.textLight)),
+              Text(
+                '=',
+                style: AppFonts.poppins(
+                  fontSize: 16,
+                  color: AppColors.textLight,
+                ),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('Laba', style: AppFonts.poppins(fontSize: 11, color: AppColors.textMedium)),
+                    Text(
+                      'Laba',
+                      style: AppFonts.poppins(
+                        fontSize: 11,
+                        color: AppColors.textMedium,
+                      ),
+                    ),
                     Text(
                       '${isPositive ? '+' : ''}${_fcFull(profit)}',
-                      style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: isPositive ? AppColors.success : AppColors.error),
+                      style: AppFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: isPositive ? AppColors.success : AppColors.error,
+                      ),
                     ),
                   ],
                 ),
@@ -647,16 +903,24 @@ class _DashboardTabState extends State<_DashboardTab> {
 
   // ── Target Harian ────────────────────────────────────────────────────────
   Widget _buildTargetHarian() {
-    final pct        = _targetHarian > 0 ? (_todayRevenue / _targetHarian).clamp(0.0, 1.0) : 0.0;
-    final tercapai   = pct >= 1.0;
-    final pctLabel   = '${(pct * 100).toStringAsFixed(0)}%';
+    final pct = _targetHarian > 0
+        ? (_todayRevenue / _targetHarian).clamp(0.0, 1.0)
+        : 0.0;
+    final tercapai = pct >= 1.0;
+    final pctLabel = '${(pct * 100).toStringAsFixed(0)}%';
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -664,19 +928,41 @@ class _DashboardTabState extends State<_DashboardTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(children: [
-                Icon(Icons.track_changes_outlined, color: AppColors.textMedium, size: 18),
-                const SizedBox(width: 8),
-                Text('Target Harian',
-                    style: AppFonts.poppins(color: AppColors.textDark, fontSize: 14, fontWeight: FontWeight.w600)),
-              ]),
+              Row(
+                children: [
+                  Icon(
+                    Icons.track_changes_outlined,
+                    color: AppColors.textMedium,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Target Harian',
+                    style: AppFonts.poppins(
+                      color: AppColors.textDark,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
               InkWell(
                 key: const Key('edit_target'),
                 onTap: _editTarget,
                 borderRadius: BorderRadius.circular(4),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  child: Text('Edit', style: AppFonts.poppins(color: AppColors.info, fontSize: 12, fontWeight: FontWeight.w500)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  child: Text(
+                    'Edit',
+                    style: AppFonts.poppins(
+                      color: AppColors.info,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -688,15 +974,33 @@ class _DashboardTabState extends State<_DashboardTab> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_fcFull(_todayRevenue),
-                      style: AppFonts.poppins(color: AppColors.textDark, fontSize: 24, fontWeight: FontWeight.w700, letterSpacing: -0.5)),
+                  Text(
+                    _fcFull(_todayRevenue),
+                    style: AppFonts.poppins(
+                      color: AppColors.textDark,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text('dari ${_fcFull(_targetHarian)}',
-                      style: AppFonts.poppins(color: AppColors.textLight, fontSize: 12)),
+                  Text(
+                    'dari ${_fcFull(_targetHarian)}',
+                    style: AppFonts.poppins(
+                      color: AppColors.textLight,
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
-              Text(pctLabel,
-                  style: AppFonts.poppins(color: tercapai ? AppColors.success : AppColors.textDark, fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(
+                pctLabel,
+                style: AppFonts.poppins(
+                  color: tercapai ? AppColors.success : AppColors.textDark,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -706,7 +1010,9 @@ class _DashboardTabState extends State<_DashboardTab> {
               value: pct,
               minHeight: 6,
               backgroundColor: AppColors.background,
-              valueColor: AlwaysStoppedAnimation<Color>(tercapai ? AppColors.success : AppColors.primary),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                tercapai ? AppColors.success : AppColors.primary,
+              ),
             ),
           ),
         ],
@@ -716,7 +1022,7 @@ class _DashboardTabState extends State<_DashboardTab> {
 
   // ── Weekly Chart ─────────────────────────────────────────────────────────
   Widget _buildWeeklyChart() {
-    final maxRev  = _weeklyData.fold(0.0, (mx, d) {
+    final maxRev = _weeklyData.fold(0.0, (mx, d) {
       final v = (d['total'] as num).toDouble();
       return v > mx ? v : mx;
     });
@@ -730,9 +1036,9 @@ class _DashboardTabState extends State<_DashboardTab> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: _weeklyData.map((d) {
-            final rev     = (d['total'] as num).toDouble();
+            final rev = (d['total'] as num).toDouble();
             final isToday = d['date'] == todayStr;
-            final pct     = maxRev > 0 ? (rev / maxRev).clamp(0.05, 1.0) : 0.05;
+            final pct = maxRev > 0 ? (rev / maxRev).clamp(0.05, 1.0) : 0.05;
 
             return Expanded(
               child: Padding(
@@ -742,12 +1048,17 @@ class _DashboardTabState extends State<_DashboardTab> {
                   children: [
                     if (rev > 0)
                       Text(
-                        rev >= 1000000 ? '${(rev/1000000).toStringAsFixed(1)}jt'
-                            : '${(rev/1000).toStringAsFixed(0)}k',
+                        rev >= 1000000
+                            ? '${(rev / 1000000).toStringAsFixed(1)}jt'
+                            : '${(rev / 1000).toStringAsFixed(0)}k',
                         style: AppFonts.poppins(
                           fontSize: 9,
-                          fontWeight: isToday ? FontWeight.w600 : FontWeight.normal,
-                          color: isToday ? AppColors.textDark : AppColors.textLight,
+                          fontWeight: isToday
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          color: isToday
+                              ? AppColors.textDark
+                              : AppColors.textLight,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -757,19 +1068,29 @@ class _DashboardTabState extends State<_DashboardTab> {
                         heightFactor: pct,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: isToday ? AppColors.primary : AppColors.border,
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                            color: isToday
+                                ? AppColors.primary
+                                : AppColors.border,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(4),
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(d['day'] as String,
-                        style: AppFonts.poppins(
-                          fontSize: 10,
-                          color: isToday ? AppColors.textDark : AppColors.textLight,
-                          fontWeight: isToday ? FontWeight.w600 : FontWeight.normal,
-                        )),
+                    Text(
+                      d['day'] as String,
+                      style: AppFonts.poppins(
+                        fontSize: 10,
+                        color: isToday
+                            ? AppColors.textDark
+                            : AppColors.textLight,
+                        fontWeight: isToday
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -795,8 +1116,9 @@ class _DashboardTabState extends State<_DashboardTab> {
       return v > mx ? v : mx;
     });
 
-    final busiest = _peakHours.reduce((a, b) =>
-        (a['jumlah'] as num) >= (b['jumlah'] as num) ? a : b);
+    final busiest = _peakHours.reduce(
+      (a, b) => (a['jumlah'] as num) >= (b['jumlah'] as num) ? a : b,
+    );
     final busiestHour = (busiest['hour'] as num).toInt();
 
     return _SectionCard(
@@ -807,10 +1129,12 @@ class _DashboardTabState extends State<_DashboardTab> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: _peakHours.map((d) {
-            final hour    = (d['hour'] as num).toInt();
-            final jumlah  = (d['jumlah'] as num).toInt();
+            final hour = (d['hour'] as num).toInt();
+            final jumlah = (d['jumlah'] as num).toInt();
             final isBusiest = hour == busiestHour;
-            final pct     = maxJumlah > 0 ? (jumlah / maxJumlah).clamp(0.06, 1.0) : 0.06;
+            final pct = maxJumlah > 0
+                ? (jumlah / maxJumlah).clamp(0.06, 1.0)
+                : 0.06;
 
             return Expanded(
               child: Padding(
@@ -821,27 +1145,43 @@ class _DashboardTabState extends State<_DashboardTab> {
                     if (isBusiest)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 4),
-                        child: Text('$jumlah',
-                            style: AppFonts.poppins(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                        child: Text(
+                          '$jumlah',
+                          style: AppFonts.poppins(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                          ),
+                        ),
                       ),
                     Flexible(
                       child: FractionallySizedBox(
                         heightFactor: pct,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: isBusiest ? AppColors.textDark : AppColors.border,
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                            color: isBusiest
+                                ? AppColors.textDark
+                                : AppColors.border,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(4),
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(hour.toString().padLeft(2, '0'),
-                        style: AppFonts.poppins(
-                          fontSize: 9,
-                          color: isBusiest ? AppColors.textDark : AppColors.textLight,
-                          fontWeight: isBusiest ? FontWeight.w600 : FontWeight.normal,
-                        )),
+                    Text(
+                      hour.toString().padLeft(2, '0'),
+                      style: AppFonts.poppins(
+                        fontSize: 9,
+                        color: isBusiest
+                            ? AppColors.textDark
+                            : AppColors.textLight,
+                        fontWeight: isBusiest
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -868,26 +1208,48 @@ class _DashboardTabState extends State<_DashboardTab> {
       icon: Icons.star_border_rounded,
       child: Column(
         children: List.generate(_topSellers.length, (i) {
-          final item  = _topSellers[i];
-          final qty   = (item['total_qty'] as num).toDouble();
-          final rev   = (item['total_revenue'] as num).toDouble();
-          final pct   = maxQty > 0 ? qty / maxQty : 0.0;
+          final item = _topSellers[i];
+          final qty = (item['total_qty'] as num).toDouble();
+          final rev = (item['total_revenue'] as num).toDouble();
+          final pct = maxQty > 0 ? qty / maxQty : 0.0;
 
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
-                  Text('${i+1}.', style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textMedium)),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(item['nama_menu'] as String,
-                        style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textDark),
-                        overflow: TextOverflow.ellipsis),
-                  ),
-                  Text(_fcFull(rev), style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                ]),
+                Row(
+                  children: [
+                    Text(
+                      '${i + 1}.',
+                      style: AppFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textMedium,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        item['nama_menu'] as String,
+                        style: AppFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textDark,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      _fcFull(rev),
+                      style: AppFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -898,12 +1260,20 @@ class _DashboardTabState extends State<_DashboardTab> {
                           value: pct,
                           minHeight: 4,
                           backgroundColor: AppColors.background,
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.textMedium),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.textMedium,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Text('${qty.toInt()} porsi', style: AppFonts.poppins(fontSize: 11, color: AppColors.textLight)),
+                    Text(
+                      '${qty.toInt()} porsi',
+                      style: AppFonts.poppins(
+                        fontSize: 11,
+                        color: AppColors.textLight,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -932,9 +1302,22 @@ class _DashboardTabState extends State<_DashboardTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Omzet Bulan Ini', style: AppFonts.poppins(fontSize: 12, color: AppColors.textMedium)),
+                Text(
+                  'Omzet Bulan Ini',
+                  style: AppFonts.poppins(
+                    fontSize: 12,
+                    color: AppColors.textMedium,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(_fcFull(thisRev), style: AppFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                Text(
+                  _fcFull(thisRev),
+                  style: AppFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                  ),
+                ),
               ],
             ),
           ),
@@ -945,28 +1328,60 @@ class _DashboardTabState extends State<_DashboardTab> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Bulan Lalu', style: AppFonts.poppins(fontSize: 12, color: AppColors.textMedium)),
+                  Text(
+                    'Bulan Lalu',
+                    style: AppFonts.poppins(
+                      fontSize: 12,
+                      color: AppColors.textMedium,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     spacing: 8,
                     runSpacing: 4,
                     children: [
-                      Text(_fcFull(lastRev), style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                      Text(
+                        _fcFull(lastRev),
+                        style: AppFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textDark,
+                        ),
+                      ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
-                          color: (revIsUp ? AppColors.success : AppColors.error).withValues(alpha: 0.1),
+                          color: (revIsUp ? AppColors.success : AppColors.error)
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(revIsUp ? Icons.arrow_upward : Icons.arrow_downward,
-                                size: 12, color: revIsUp ? AppColors.success : AppColors.error),
+                            Icon(
+                              revIsUp
+                                  ? Icons.arrow_upward
+                                  : Icons.arrow_downward,
+                              size: 12,
+                              color: revIsUp
+                                  ? AppColors.success
+                                  : AppColors.error,
+                            ),
                             const SizedBox(width: 2),
-                            Text('${revChange.abs().toStringAsFixed(1)}%',
-                                style: AppFonts.poppins(fontSize: 10, fontWeight: FontWeight.bold, color: revIsUp ? AppColors.success : AppColors.error)),
+                            Text(
+                              '${revChange.abs().toStringAsFixed(1)}%',
+                              style: AppFonts.poppins(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: revIsUp
+                                    ? AppColors.success
+                                    : AppColors.error,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -990,7 +1405,7 @@ class _DashboardTabState extends State<_DashboardTab> {
         child: _EmptyInfo('Belum ada data'),
       );
     }
-    
+
     return _SectionCard(
       title: 'Menu Paling Sedikit Terjual',
       icon: Icons.trending_down_rounded,
@@ -1010,7 +1425,13 @@ class _DashboardTabState extends State<_DashboardTab> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
-                    child: Text('${i + 1}', style: AppFonts.poppins(fontWeight: FontWeight.bold, color: AppColors.error)),
+                    child: Text(
+                      '${i + 1}',
+                      style: AppFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.error,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -1018,18 +1439,41 @@ class _DashboardTabState extends State<_DashboardTab> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item['nama_menu'] as String, style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                      Text(item['kategori'] as String, style: AppFonts.poppins(fontSize: 11, color: AppColors.textMedium)),
+                      Text(
+                        item['nama_menu'] as String,
+                        style: AppFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                      Text(
+                        item['kategori'] as String,
+                        style: AppFonts.poppins(
+                          fontSize: 11,
+                          color: AppColors.textMedium,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.background,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text('$qty terjual', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textMedium)),
+                  child: Text(
+                    '$qty terjual',
+                    style: AppFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textMedium,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -1048,7 +1492,10 @@ class _DashboardTabState extends State<_DashboardTab> {
         child: _EmptyInfo('Belum ada data'),
       );
     }
-    final total = _paymentStats.fold(0, (s, e) => s + (e['jumlah'] as num).toInt());
+    final total = _paymentStats.fold(
+      0,
+      (s, e) => s + (e['jumlah'] as num).toInt(),
+    );
 
     return _SectionCard(
       title: 'Pembayaran',
@@ -1056,9 +1503,9 @@ class _DashboardTabState extends State<_DashboardTab> {
       child: Column(
         children: _paymentStats.map((s) {
           final method = s['metode_pembayaran'] as String;
-          final count  = (s['jumlah'] as num).toInt();
-          final rev    = (s['total'] as num).toDouble();
-          final pct    = total > 0 ? count / total : 0.0;
+          final count = (s['jumlah'] as num).toInt();
+          final rev = (s['total'] as num).toDouble();
+          final pct = total > 0 ? count / total : 0.0;
 
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
@@ -1066,20 +1513,47 @@ class _DashboardTabState extends State<_DashboardTab> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(6)),
-                  child: Icon(Icons.wallet_rounded, size: 16, color: AppColors.textMedium),
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    Icons.wallet_rounded,
+                    size: 16,
+                    color: AppColors.textMedium,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(method, style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textDark)),
-                      Text('$count transaksi (${(pct*100).toStringAsFixed(0)}%)', style: AppFonts.poppins(fontSize: 11, color: AppColors.textLight)),
+                      Text(
+                        method,
+                        style: AppFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                      Text(
+                        '$count transaksi (${(pct * 100).toStringAsFixed(0)}%)',
+                        style: AppFonts.poppins(
+                          fontSize: 11,
+                          color: AppColors.textLight,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Text(_fcFull(rev), style: AppFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                Text(
+                  _fcFull(rev),
+                  style: AppFonts.poppins(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textDark,
+                  ),
+                ),
               ],
             ),
           );
@@ -1102,13 +1576,20 @@ class _KpiCard extends StatelessWidget {
   const _KpiCard({required this.data});
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1121,20 +1602,32 @@ class _KpiCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(data.label, style: AppFonts.poppins(fontSize: 11, color: AppColors.textLight)),
+                Text(
+                  data.label,
+                  style: AppFonts.poppins(
+                    fontSize: 11,
+                    color: AppColors.textLight,
+                  ),
+                ),
                 const SizedBox(height: 2),
                 Expanded(
                   child: Text(
-                    data.value, 
-                    style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textDark, letterSpacing: -0.5),
-                    maxLines: 2, 
+                    data.value,
+                    style: AppFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textDark,
+                      letterSpacing: -0.5,
+                    ),
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
           ),
-      ]),
+        ],
+      ),
     );
   }
 }
@@ -1143,26 +1636,49 @@ class _SectionCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Widget child;
-  const _SectionCard({required this.title, required this.icon, required this.child});
+  const _SectionCard({
+    required this.title,
+    required this.icon,
+    required this.child,
+  });
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          Icon(icon, color: AppColors.textMedium, size: 18),
-          const SizedBox(width: 8),
-          Text(title, style: AppFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-        ]),
-        const SizedBox(height: 20),
-        child,
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: AppColors.textMedium, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: AppFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          child,
+        ],
+      ),
     );
   }
 }
@@ -1172,10 +1688,16 @@ class _EmptyInfo extends StatelessWidget {
   const _EmptyInfo(this.message);
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Center(child: Text(message, style: AppFonts.poppins(color: AppColors.textLight, fontSize: 13))),
+      child: Center(
+        child: Text(
+          message,
+          style: AppFonts.poppins(color: AppColors.textLight, fontSize: 13),
+        ),
+      ),
     );
   }
 }

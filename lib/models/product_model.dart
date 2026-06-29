@@ -18,9 +18,9 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      id:       map['id'] as int?,
+      id: map['id'] as int?,
       namaMenu: map['nama_menu'] as String,
-      harga:    (map['harga'] as num).toDouble(),
+      harga: (map['harga'] as num).toDouble(),
       kategori: map['kategori'] as String,
       isActive: (map['is_active'] as int? ?? 1) == 1,
       imagePath: map['image_path'] as String?,
@@ -31,8 +31,8 @@ class ProductModel {
     return {
       if (id != null) 'id': id,
       'nama_menu': namaMenu,
-      'harga':     harga,
-      'kategori':  kategori,
+      'harga': harga,
+      'kategori': kategori,
       'is_active': isActive ? 1 : 0,
       if (imagePath != null) 'image_path': imagePath,
     };

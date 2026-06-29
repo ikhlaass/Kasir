@@ -32,21 +32,21 @@ class AppFonts {
   static TextTheme textTheme([TextTheme? base]) {
     final t = base ?? const TextTheme();
     return t.copyWith(
-      displayLarge:    t.displayLarge?.copyWith(fontFamily: _family),
-      displayMedium:   t.displayMedium?.copyWith(fontFamily: _family),
-      displaySmall:    t.displaySmall?.copyWith(fontFamily: _family),
-      headlineLarge:   t.headlineLarge?.copyWith(fontFamily: _family),
-      headlineMedium:  t.headlineMedium?.copyWith(fontFamily: _family),
-      headlineSmall:   t.headlineSmall?.copyWith(fontFamily: _family),
-      titleLarge:      t.titleLarge?.copyWith(fontFamily: _family),
-      titleMedium:     t.titleMedium?.copyWith(fontFamily: _family),
-      titleSmall:      t.titleSmall?.copyWith(fontFamily: _family),
-      bodyLarge:       t.bodyLarge?.copyWith(fontFamily: _family),
-      bodyMedium:      t.bodyMedium?.copyWith(fontFamily: _family),
-      bodySmall:       t.bodySmall?.copyWith(fontFamily: _family),
-      labelLarge:      t.labelLarge?.copyWith(fontFamily: _family),
-      labelMedium:     t.labelMedium?.copyWith(fontFamily: _family),
-      labelSmall:      t.labelSmall?.copyWith(fontFamily: _family),
+      displayLarge: t.displayLarge?.copyWith(fontFamily: _family),
+      displayMedium: t.displayMedium?.copyWith(fontFamily: _family),
+      displaySmall: t.displaySmall?.copyWith(fontFamily: _family),
+      headlineLarge: t.headlineLarge?.copyWith(fontFamily: _family),
+      headlineMedium: t.headlineMedium?.copyWith(fontFamily: _family),
+      headlineSmall: t.headlineSmall?.copyWith(fontFamily: _family),
+      titleLarge: t.titleLarge?.copyWith(fontFamily: _family),
+      titleMedium: t.titleMedium?.copyWith(fontFamily: _family),
+      titleSmall: t.titleSmall?.copyWith(fontFamily: _family),
+      bodyLarge: t.bodyLarge?.copyWith(fontFamily: _family),
+      bodyMedium: t.bodyMedium?.copyWith(fontFamily: _family),
+      bodySmall: t.bodySmall?.copyWith(fontFamily: _family),
+      labelLarge: t.labelLarge?.copyWith(fontFamily: _family),
+      labelMedium: t.labelMedium?.copyWith(fontFamily: _family),
+      labelSmall: t.labelSmall?.copyWith(fontFamily: _family),
     );
   }
 }

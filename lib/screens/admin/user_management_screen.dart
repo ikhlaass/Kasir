@@ -50,24 +50,43 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Tambah Kasir', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                      IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
+                      Text(
+                        'Tambah Kasir',
+                        style: AppFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => Navigator.pop(ctx),
+                        color: AppColors.textMedium,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     key: const Key('input_username'),
                     controller: usernameCtrl,
-                    decoration: _inputDecoration('Username', Icons.person_outline),
-                    validator: (v) => v == null || v.isEmpty ? 'Wajib diisi' : null,
+                    decoration: _inputDecoration(
+                      'Username',
+                      Icons.person_outline,
+                    ),
+                    validator: (v) =>
+                        v == null || v.isEmpty ? 'Wajib diisi' : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     key: const Key('input_password'),
                     controller: passwordCtrl,
                     obscureText: true,
-                    decoration: _inputDecoration('Password', Icons.lock_outline),
-                    validator: (v) => v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
+                    decoration: _inputDecoration(
+                      'Password',
+                      Icons.lock_outline,
+                    ),
+                    validator: (v) =>
+                        v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
                   ),
                   const SizedBox(height: 24),
                   SizedBox(
@@ -78,16 +97,25 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                       onPressed: () async {
                         if (!formKey.currentState!.validate()) return;
                         final prov = context.read<UserManagementProvider>();
-                        final err = await prov.addKasir(username: usernameCtrl.text.trim(), password: passwordCtrl.text);
+                        final err = await prov.addKasir(
+                          username: usernameCtrl.text.trim(),
+                          password: passwordCtrl.text,
+                        );
                         if (!ctx.mounted) return;
                         if (err == null) {
                           Navigator.pop(ctx);
-                          _showSnackBar('Kasir berhasil ditambahkan', AppColors.success);
+                          _showSnackBar(
+                            'Kasir berhasil ditambahkan',
+                            AppColors.success,
+                          );
                         } else {
                           _showSnackBar(err, AppColors.error);
                         }
                       },
-                      child: Text('Simpan Kasir', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+                      child: Text(
+                        'Simpan Kasir',
+                        style: AppFonts.poppins(fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ],
@@ -127,17 +155,38 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Ganti Password', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                      IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(ctx), color: AppColors.textMedium),
+                      Text(
+                        'Ganti Password',
+                        style: AppFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => Navigator.pop(ctx),
+                        color: AppColors.textMedium,
+                      ),
                     ],
                   ),
-                  Text('Untuk kasir: ${kasir.username}', style: AppFonts.poppins(fontSize: 13, color: AppColors.textLight)),
+                  Text(
+                    'Untuk kasir: ${kasir.username}',
+                    style: AppFonts.poppins(
+                      fontSize: 13,
+                      color: AppColors.textLight,
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: passwordCtrl,
                     obscureText: true,
-                    decoration: _inputDecoration('Password Baru', Icons.lock_reset_outlined),
-                    validator: (v) => v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
+                    decoration: _inputDecoration(
+                      'Password Baru',
+                      Icons.lock_reset_outlined,
+                    ),
+                    validator: (v) =>
+                        v == null || v.length < 4 ? 'Minimal 4 karakter' : null,
                   ),
                   const SizedBox(height: 24),
                   SizedBox(
@@ -146,12 +195,20 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (!formKey.currentState!.validate()) return;
-                        await context.read<UserManagementProvider>().changePassword(kasir.id!, passwordCtrl.text);
+                        await context
+                            .read<UserManagementProvider>()
+                            .changePassword(kasir.id!, passwordCtrl.text);
                         if (!ctx.mounted) return;
                         Navigator.pop(ctx);
-                        _showSnackBar('Password berhasil diubah', AppColors.success);
+                        _showSnackBar(
+                          'Password berhasil diubah',
+                          AppColors.success,
+                        );
                       },
-                      child: Text('Simpan Password', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+                      child: Text(
+                        'Simpan Password',
+                        style: AppFonts.poppins(fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ],
@@ -169,20 +226,38 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text('Hapus Akun?', style: AppFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark)),
-        content: Text('Apakah Anda yakin ingin menghapus kasir "${kasir.username}"?', style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium)),
+        title: Text(
+          'Hapus Akun?',
+          style: AppFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: AppColors.textDark,
+          ),
+        ),
+        content: Text(
+          'Apakah Anda yakin ingin menghapus kasir "${kasir.username}"?',
+          style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Batal', style: AppFonts.poppins(color: AppColors.textMedium)),
+            child: Text(
+              'Batal',
+              style: AppFonts.poppins(color: AppColors.textMedium),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () async {
-              await context.read<UserManagementProvider>().deleteKasir(kasir.id!);
+              await context.read<UserManagementProvider>().deleteKasir(
+                kasir.id!,
+              );
               if (ctx.mounted) Navigator.pop(ctx);
             },
-            child: Text('Hapus', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+            child: Text(
+              'Hapus',
+              style: AppFonts.poppins(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -200,18 +275,28 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   }
 
   void _showSnackBar(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message, style: AppFonts.poppins()),
-      backgroundColor: color,
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: AppFonts.poppins()),
+        backgroundColor: color,
+      ),
+    );
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Manajemen Kasir', style: AppFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18, letterSpacing: -0.5)),
+        title: Text(
+          'Manajemen Kasir',
+          style: AppFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            letterSpacing: -0.5,
+          ),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(color: AppColors.border, height: 1),
@@ -222,21 +307,39 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         heroTag: 'add_user_hero_tag',
         onPressed: _showAddKasirSheet,
         icon: Icon(Icons.person_add_outlined),
-        label: Text('Tambah Kasir', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+        label: Text(
+          'Tambah Kasir',
+          style: AppFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: AppColors.primary, width: 1)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: AppColors.primary, width: 1),
+        ),
       ),
       body: Consumer<UserManagementProvider>(
         builder: (context, provider, child) {
-          if (provider.isLoading) return const Center(child: CircularProgressIndicator());
+          if (provider.isLoading)
+            return const Center(child: CircularProgressIndicator());
           if (provider.kasirList.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.people_outline, size: 48, color: AppColors.textLight.withValues(alpha: 0.5)),
+                  Icon(
+                    Icons.people_outline,
+                    size: 48,
+                    color: AppColors.textLight.withValues(alpha: 0.5),
+                  ),
                   const SizedBox(height: 16),
-                  Text('Belum ada kasir', style: AppFonts.poppins(fontSize: 14, color: AppColors.textDark, fontWeight: FontWeight.w500)),
+                  Text(
+                    'Belum ada kasir',
+                    style: AppFonts.poppins(
+                      fontSize: 14,
+                      color: AppColors.textDark,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             );
@@ -249,23 +352,39 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             itemBuilder: (ctx, i) {
               final kasir = provider.kasirList[i];
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4))],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: [
                     Container(
-                      width: 40, height: 40,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
                         color: AppColors.background,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
-                        child: Text(kasir.username.substring(0, 1).toUpperCase(),
-                            style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+                        child: Text(
+                          kasir.username.substring(0, 1).toUpperCase(),
+                          style: AppFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -273,8 +392,21 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(kasir.username, style: AppFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textDark)),
-                          Text('Kasir', style: AppFonts.poppins(fontSize: 11, color: AppColors.textLight)),
+                          Text(
+                            kasir.username,
+                            style: AppFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: AppColors.textDark,
+                            ),
+                          ),
+                          Text(
+                            'Kasir',
+                            style: AppFonts.poppins(
+                              fontSize: 11,
+                              color: AppColors.textLight,
+                            ),
+                          ),
                         ],
                       ),
                     ),

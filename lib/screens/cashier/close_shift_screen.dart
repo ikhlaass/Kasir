@@ -23,7 +23,11 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
   final DatabaseHelper _db = DatabaseHelper();
   bool _isLoading = false;
 
-  final currencyFormatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+  final currencyFormatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp ',
+    decimalDigits: 0,
+  );
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
@@ -31,7 +35,9 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final actualCash = double.parse(_actualCashCtrl.text.replaceAll(RegExp(r'[^0-9]'), ''));
+      final actualCash = double.parse(
+        _actualCashCtrl.text.replaceAll(RegExp(r'[^0-9]'), ''),
+      );
       final difference = actualCash - widget.shift.expectedCash;
       final now = DateTime.now().toIso8601String();
 
@@ -50,32 +56,52 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
       await _db.closeShift(updatedShift);
 
       if (!mounted) return;
-      
+
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
           backgroundColor: AppColors.surface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Center(
             child: Icon(
-              difference == 0 ? Icons.check_circle : (difference > 0 ? Icons.info : Icons.warning),
-              color: difference == 0 ? AppColors.success : (difference > 0 ? AppColors.info : AppColors.error),
+              difference == 0
+                  ? Icons.check_circle
+                  : (difference > 0 ? Icons.info : Icons.warning),
+              color: difference == 0
+                  ? AppColors.success
+                  : (difference > 0 ? AppColors.info : AppColors.error),
               size: 64,
             ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Shift Berhasil Ditutup!', style: AppFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+              Text(
+                'Shift Berhasil Ditutup!',
+                style: AppFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
+              ),
               const SizedBox(height: 16),
-              _summaryRow('Seharusnya Ada:', currencyFormatter.format(widget.shift.expectedCash)),
+              _summaryRow(
+                'Seharusnya Ada:',
+                currencyFormatter.format(widget.shift.expectedCash),
+              ),
               _summaryRow('Uang Fisik:', currencyFormatter.format(actualCash)),
               Divider(height: 24),
               _summaryRow(
                 'Selisih:',
-                difference == 0 ? 'Balance' : currencyFormatter.format(difference),
-                valueColor: difference == 0 ? AppColors.success : (difference > 0 ? AppColors.info : AppColors.error),
+                difference == 0
+                    ? 'Balance'
+                    : currencyFormatter.format(difference),
+                valueColor: difference == 0
+                    ? AppColors.success
+                    : (difference > 0 ? AppColors.info : AppColors.error),
                 isBold: true,
               ),
             ],
@@ -91,29 +117,42 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
                     (_) => false,
                   );
                 },
-                child: Text('Kembali ke Login', style: AppFonts.poppins(fontWeight: FontWeight.bold)),
+                child: Text(
+                  'Kembali ke Login',
+                  style: AppFonts.poppins(fontWeight: FontWeight.bold),
+                ),
               ),
-            )
+            ),
           ],
         ),
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: $e'), backgroundColor: AppColors.error),
+        SnackBar(
+          content: Text('Terjadi kesalahan: $e'),
+          backgroundColor: AppColors.error,
+        ),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  Widget _summaryRow(String label, String value, {Color? valueColor, bool isBold = false}) {
+  Widget _summaryRow(
+    String label,
+    String value, {
+    Color? valueColor,
+    bool isBold = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium)),
+          Text(
+            label,
+            style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
+          ),
           Text(
             value,
             style: AppFonts.poppins(
@@ -128,11 +167,15 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
   }
 
   @override
-  Widget build(BuildContext context) { Theme.of(context);
+  Widget build(BuildContext context) {
+    Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Tutup Shift', style: AppFonts.poppins(fontWeight: FontWeight.w600)),
+        title: Text(
+          'Tutup Shift',
+          style: AppFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         elevation: 0,
       ),
       body: Center(
@@ -145,7 +188,11 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 10)),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
               ],
             ),
             child: Form(
@@ -157,7 +204,11 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
                   Center(
                     child: Text(
                       'Hitung Uang Laci',
-                      style: AppFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                      style: AppFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -165,7 +216,10 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
                     child: Text(
                       'Silakan hitung semua uang tunai yang ada di dalam laci saat ini dan masukkan jumlahnya di bawah.',
                       textAlign: TextAlign.center,
-                      style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
+                      style: AppFonts.poppins(
+                        fontSize: 13,
+                        color: AppColors.textMedium,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -177,30 +231,63 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
                     ),
                     child: Column(
                       children: [
-                        _summaryRow('Modal Awal', currencyFormatter.format(widget.shift.startingCash)),
-                        _summaryRow('Pendapatan Tunai', currencyFormatter.format(widget.shift.expectedCash - widget.shift.startingCash)),
+                        _summaryRow(
+                          'Modal Awal',
+                          currencyFormatter.format(widget.shift.startingCash),
+                        ),
+                        _summaryRow(
+                          'Pendapatan Tunai',
+                          currencyFormatter.format(
+                            widget.shift.expectedCash -
+                                widget.shift.startingCash,
+                          ),
+                        ),
                         Divider(),
-                        _summaryRow('Estimasi Laci', currencyFormatter.format(widget.shift.expectedCash), isBold: true, valueColor: AppColors.primary),
+                        _summaryRow(
+                          'Estimasi Laci',
+                          currencyFormatter.format(widget.shift.expectedCash),
+                          isBold: true,
+                          valueColor: AppColors.primary,
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text('Uang Fisik Sebenarnya (Rp)', style: AppFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                  Text(
+                    'Uang Fisik Sebenarnya (Rp)',
+                    style: AppFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textDark,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _actualCashCtrl,
                     keyboardType: TextInputType.number,
-                    style: AppFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: AppFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                     decoration: InputDecoration(
                       prefixText: 'Rp ',
-                      prefixStyle: AppFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                      prefixStyle: AppFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                      ),
                       filled: true,
                       fillColor: AppColors.background,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     validator: (v) {
                       if (v == null || v.isEmpty) return 'Wajib diisi';
-                      final val = double.tryParse(v.replaceAll(RegExp(r'[^0-9]'), ''));
+                      final val = double.tryParse(
+                        v.replaceAll(RegExp(r'[^0-9]'), ''),
+                      );
                       if (val == null) return 'Angka tidak valid';
                       return null;
                     },
@@ -213,11 +300,20 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
                       onPressed: _isLoading ? null : _submit,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.error,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : Text('Tutup Kasir', style: AppFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                          : Text(
+                              'Tutup Kasir',
+                              style: AppFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ],
