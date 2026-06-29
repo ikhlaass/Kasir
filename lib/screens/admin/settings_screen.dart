@@ -400,6 +400,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       child: Image.file(
                                         File(_qrisImagePath!),
                                         fit: BoxFit.cover,
+                                        cacheWidth: 400, // Optimize memory usage
                                       ),
                                     )
                                   : Column(

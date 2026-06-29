@@ -1172,7 +1172,7 @@ class _CashierScreenState extends State<CashierScreen> {
             idTransaksi: cart.activeTransactionId ?? 0,
             idProduk: item.product.id!,
             qty: item.qty,
-            subtotal: item.subtotal,
+            subtotal:item.subtotal,
           ),
         )
         .toList();
@@ -1273,11 +1273,13 @@ class _CashierScreenState extends State<CashierScreen> {
                   ),
 
                   // Content
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                         Text(
                           'Pilih Metode Pembayaran',
                           style: AppFonts.poppins(
@@ -1438,6 +1440,7 @@ class _CashierScreenState extends State<CashierScreen> {
                                       width: 250,
                                       height: 250,
                                       fit: BoxFit.cover,
+                                      cacheWidth: 500, // Optimize memory usage
                                     ),
                                   )
                                 : Container(
@@ -1756,13 +1759,15 @@ class _CashierScreenState extends State<CashierScreen> {
                                     color: valid
                                         ? Colors.white
                                         : AppColors.textLight,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
