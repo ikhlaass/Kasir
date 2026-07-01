@@ -671,20 +671,40 @@ class _DashboardTabState extends State<_DashboardTab> {
       _KpiData('Rata-rata', _fc(_avgTrx), Icons.trending_up_rounded),
       _KpiData('Menu Terlaris', topMenu, Icons.emoji_events_outlined),
     ];
-    final screenWidth = MediaQuery.of(context).size.width;
-    final aspectRatio = screenWidth < 400 ? 1.1 : 1.4;
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: aspectRatio,
-      ),
-      itemCount: kpis.length,
-      itemBuilder: (ctx, i) => _KpiCard(data: kpis[i]),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        int crossAxisCount = 2;
+        double aspectRatio = 1.4;
+
+        if (width >= 800) {
+          crossAxisCount = 4;
+          aspectRatio = 1.8;
+        } else if (width >= 600) {
+          crossAxisCount = 3;
+          aspectRatio = 1.6;
+        } else if (width >= 400) {
+          crossAxisCount = 2;
+          aspectRatio = 1.6;
+        } else {
+          crossAxisCount = 2;
+          aspectRatio = 1.2;
+        }
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: aspectRatio,
+          ),
+          itemCount: kpis.length,
+          itemBuilder: (ctx, i) => _KpiCard(data: kpis[i]),
+        );
+      },
     );
   }
 

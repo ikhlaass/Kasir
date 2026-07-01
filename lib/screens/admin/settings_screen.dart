@@ -10,7 +10,7 @@ import '../../utils/app_fonts.dart';
 import '../../providers/user_management_provider.dart';
 import '../../providers/product_provider.dart';
 import '../auth/login_screen.dart';
-
+import 'package:path_provider/path_provider.dart';
 class SettingsScreen extends StatefulWidget {
   final String adminUsername;
   const SettingsScreen({super.key, required this.adminUsername});
@@ -64,12 +64,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isSaving = true);
+    
+    String savedQrisPath = _qrisImagePath ?? '';
+    if (savedQrisPath.isNotEmpty && File(savedQrisPath).existsSync()) {
+      try {
+        final docDir = await getApplicationDocumentsDirectory();
+        final fileName = 'qris_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final newPath = '${docDir.path}/$fileName';
+        if (!savedQrisPath.startsWith(docDir.path)) {
+          final file = File(savedQrisPath);
+          final newFile = await file.copy(newPath);
+          savedQrisPath = newFile.path;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
     await _db.saveAllSettings({
       SettingKeys.namaToko: _namaCtrl.text.trim(),
       SettingKeys.alamatToko: _alamatCtrl.text.trim(),
       SettingKeys.teleponToko: _teleponCtrl.text.trim(),
       SettingKeys.deskripsiToko: _deskripsiCtrl.text.trim(),
-      SettingKeys.qrisPath: _qrisImagePath ?? '',
+      SettingKeys.qrisPath: savedQrisPath,
     });
     SupabaseService().pushSettings();
     if (mounted) {
@@ -394,7 +411,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 border: Border.all(color: AppColors.border),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: _qrisImagePath != null
+                              child: _qrisImagePath != null && File(_qrisImagePath!).existsSync()
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(12),
                                       child: Image.file(
@@ -565,6 +582,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 40),
                 ],
               ),

@@ -1432,7 +1432,7 @@ class _CashierScreenState extends State<CashierScreen> {
                           ),
                           const SizedBox(height: 12),
                           Center(
-                            child: qrisPath != null && qrisPath.isNotEmpty
+                            child: qrisPath != null && qrisPath.isNotEmpty && File(qrisPath).existsSync()
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image.file(
