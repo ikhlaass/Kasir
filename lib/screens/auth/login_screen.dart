@@ -110,148 +110,189 @@ class _LoginScreenState extends State<LoginScreen> {
           ThemeManager.isDark.value = !ThemeManager.isDark.value;
         },
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 400),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Logo / Icon
-                  Center(
-                    child: Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.blur_on_rounded,
-                        color: Colors.white,
-                        size: 28,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.background,
+              AppColors.primary.withValues(alpha: 0.03),
+              AppColors.background,
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 400),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 24,
+                      offset: const Offset(0, 12),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Logo / Icon
+                    Center(
+                      child: Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.storefront_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
-                  // Welcome text
-                  Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Welcome back',
-                          style: AppFonts.poppins(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
-                            letterSpacing: -0.5,
-                          ),
+                    // Brand name
+                    Center(
+                      child: Text(
+                        'Kasir Nasi Goreng',
+                        style: AppFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                          letterSpacing: 1.5,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Sign in to your account',
-                          style: AppFonts.poppins(
-                            fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Welcome text
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Selamat Datang',
+                            style: AppFonts.poppins(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textDark,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Masuk ke akun Anda untuk melanjutkan',
+                            style: AppFonts.poppins(
+                              fontSize: 14,
+                              color: AppColors.textMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+
+                    // Form fields
+                    Text(
+                      'Username',
+                      style: AppFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    TextField(
+                      key: const Key('username_field'),
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        hintText: 'Masukkan username',
+                        prefixIcon: Icon(Icons.person_outline),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    Text(
+                      'Password',
+                      style: AppFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    TextField(
+                      key: const Key('password_field'),
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan password',
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
                             color: AppColors.textMedium,
                           ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Form fields
-                  Text(
-                    'Username',
-                    style: AppFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    key: const Key('username_field'),
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your username',
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  Text(
-                    'Password',
-                    style: AppFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    key: const Key('password_field'),
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your password',
-                      prefixIcon: Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                          color: AppColors.textMedium,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
                       ),
+                      onSubmitted: (_) => _login(),
                     ),
-                    onSubmitted: (_) => _login(),
-                  ),
-                  const SizedBox(height: 32),
+                    const SizedBox(height: 32),
 
-                  // Login button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      key: const Key('login_button'),
-                      onPressed: _isLoading ? null : _login,
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
+                    // Login button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        key: const Key('login_button'),
+                        onPressed: _isLoading ? null : _login,
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                'Masuk',
+                                style: AppFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            )
-                          : Text(
-                              'Sign in',
-                              style: AppFonts.poppins(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

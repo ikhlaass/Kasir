@@ -22,4 +22,5 @@ class SettingKeys {
   static const String teleponToko = 'telepon_toko';
   static const String deskripsiToko = 'deskripsi_toko';
   static const String qrisPath = 'qris_path';
+  static const String qrisCloudUrl = 'qris_cloud_url';
 }

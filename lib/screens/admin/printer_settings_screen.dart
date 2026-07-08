@@ -289,13 +289,17 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
               ),
             ),
 
-          const Padding(
+          Padding(
             padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Perangkat Bluetooth Tersimpan/Paired',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: AppFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: AppColors.textDark,
+                ),
               ),
             ),
           ),

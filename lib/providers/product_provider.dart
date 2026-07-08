@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../models/product_model.dart';
 import '../services/database_helper.dart';
+import '../services/supabase_service.dart';
 
 /// ProductProvider — mengelola state daftar produk menggunakan Provider.
 class ProductProvider with ChangeNotifier {
@@ -39,6 +40,7 @@ class ProductProvider with ChangeNotifier {
     final id = await _db.insertProduct(product);
     _products.add(product.copyWith(id: id));
     notifyListeners();
+    SupabaseService().syncData().catchError((_) {});
   }
 
   Future<void> updateProduct(ProductModel product) async {
@@ -48,6 +50,7 @@ class ProductProvider with ChangeNotifier {
       _products[index] = product;
       notifyListeners();
     }
+    SupabaseService().syncData().catchError((_) {});
   }
 
   /// Toggle status aktif/nonaktif produk
@@ -59,11 +62,13 @@ class ProductProvider with ChangeNotifier {
       _products[index] = product.copyWith(isActive: newState);
       notifyListeners();
     }
+    SupabaseService().syncData().catchError((_) {});
   }
 
   Future<void> deleteProduct(int id) async {
     await _db.deleteProduct(id);
     _products.removeWhere((p) => p.id == id);
     notifyListeners();
+    SupabaseService().syncData().catchError((_) {});
   }
 }

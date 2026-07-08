@@ -154,6 +154,13 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: AppColors.primary,
+                          width: 2,
+                        ),
+                      ),
                     ),
                     validator: (v) {
                       if (v == null || v.isEmpty) return 'Wajib diisi';

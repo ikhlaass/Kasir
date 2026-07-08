@@ -6,6 +6,7 @@ class ProductModel {
   final String kategori;
   final bool isActive;
   final String? imagePath;
+  final String? imageCloudUrl;
 
   ProductModel({
     this.id,
@@ -14,6 +15,7 @@ class ProductModel {
     required this.kategori,
     this.isActive = true,
     this.imagePath,
+    this.imageCloudUrl,
   });
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
@@ -24,6 +26,7 @@ class ProductModel {
       kategori: map['kategori'] as String,
       isActive: (map['is_active'] as int? ?? 1) == 1,
       imagePath: map['image_path'] as String?,
+      imageCloudUrl: map['image_cloud_url'] as String?,
     );
   }
 
@@ -35,6 +38,7 @@ class ProductModel {
       'kategori': kategori,
       'is_active': isActive ? 1 : 0,
       if (imagePath != null) 'image_path': imagePath,
+      if (imageCloudUrl != null) 'image_cloud_url': imageCloudUrl,
     };
   }
 
@@ -45,6 +49,7 @@ class ProductModel {
     String? kategori,
     bool? isActive,
     String? imagePath,
+    String? imageCloudUrl,
   }) {
     return ProductModel(
       id: id ?? this.id,
@@ -53,6 +58,7 @@ class ProductModel {
       kategori: kategori ?? this.kategori,
       isActive: isActive ?? this.isActive,
       imagePath: imagePath ?? this.imagePath,
+      imageCloudUrl: imageCloudUrl ?? this.imageCloudUrl,
     );
   }
 

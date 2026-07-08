@@ -24,6 +24,10 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Kasir Nasi Goreng membutuhkan akses Bluetooth untuk mendeteksi dan mencetak struk lewat Printer Thermal.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Kasir Nasi Goreng membutuhkan akses Bluetooth untuk mengirim data ke Printer Thermal.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

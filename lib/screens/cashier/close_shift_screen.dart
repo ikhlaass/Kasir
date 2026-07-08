@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../models/shift_model.dart';
 import '../../models/user_model.dart';
 import '../../services/database_helper.dart';
+import '../../services/supabase_service.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_fonts.dart';
 import '../auth/login_screen.dart';
@@ -54,6 +55,9 @@ class _CloseShiftScreenState extends State<CloseShiftScreen> {
       );
 
       await _db.closeShift(updatedShift);
+
+      // Auto-sync in background
+      SupabaseService().syncData().catchError((_) {});
 
       if (!mounted) return;
 

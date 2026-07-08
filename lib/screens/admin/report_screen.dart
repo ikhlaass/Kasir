@@ -4,6 +4,8 @@ import '../../services/database_helper.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_fonts.dart';
 
+import '../../services/report_export_service.dart';
+
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
 
@@ -13,6 +15,7 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   final _db = DatabaseHelper();
+  final _exportService = ReportExportService();
   String _selectedPeriod = 'today';
   bool _isLoading = true;
 
@@ -45,6 +48,54 @@ class _ReportScreenState extends State<ReportScreen> {
     }
   }
 
+  void _showExportOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Export Laporan',
+                style: AppFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined, color: Colors.redAccent),
+                title: Text('Export ke PDF', style: AppFonts.poppins(fontWeight: FontWeight.w500)),
+                subtitle: Text('Buka preview dan cetak/simpan sebagai PDF', style: AppFonts.poppins(fontSize: 12, color: AppColors.textLight)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _exportService.exportPdf(context, _selectedPeriod, _transactions);
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.table_chart_outlined, color: Colors.green),
+                title: Text('Export ke Excel (CSV)', style: AppFonts.poppins(fontWeight: FontWeight.w500)),
+                subtitle: Text('Simpan & bagikan file data CSV untuk Excel', style: AppFonts.poppins(fontSize: 12, color: AppColors.textLight)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _exportService.exportCsv(context, _selectedPeriod, _transactions);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   String _fc(double amount) {
     return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}';
   }
@@ -63,6 +114,13 @@ class _ReportScreenState extends State<ReportScreen> {
             letterSpacing: -0.5,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: _transactions.isEmpty ? null : _showExportOptions,
+            icon: const Icon(Icons.file_download_outlined),
+            tooltip: 'Export Laporan',
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Column(

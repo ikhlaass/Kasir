@@ -11,6 +11,7 @@ import 'report_screen.dart';
 import 'expense_screen.dart';
 import 'settings_screen.dart';
 import '../cashier/cashier_screen.dart';
+import '../../services/supabase_service.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   final UserModel user;
@@ -390,7 +391,7 @@ class _DashboardTab extends StatefulWidget {
   State<_DashboardTab> createState() => _DashboardTabState();
 }
 
-class _DashboardTabState extends State<_DashboardTab> {
+class _DashboardTabState extends State<_DashboardTab> with WidgetsBindingObserver {
   final _db = DatabaseHelper();
 
   double _todayRevenue = 0;
@@ -410,12 +411,35 @@ class _DashboardTabState extends State<_DashboardTab> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadAll();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<ProductProvider>().loadProducts();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Auto-sync when app comes to foreground
+      SupabaseService().syncData().then((_) {
+        if (mounted) _loadAll();
+      }).catchError((_) {});
+    }
+  }
+
+  Future<void> _handleRefresh() async {
+    setState(() => _loading = true);
+    await SupabaseService().syncData().catchError((_) {});
+    await _loadAll();
   }
 
   Future<void> _loadAll() async {
@@ -558,7 +582,7 @@ class _DashboardTabState extends State<_DashboardTab> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: RefreshIndicator(
-        onRefresh: _loadAll,
+        onRefresh: _handleRefresh,
         color: AppColors.primary,
         child: CustomScrollView(
           slivers: [
@@ -845,23 +869,23 @@ class _DashboardTabState extends State<_DashboardTab> {
                         color: AppColors.textMedium,
                       ),
                     ),
-                    Text(
-                      _fcFull(_todayRevenue),
-                      style: AppFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.success,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        _fcFull(_todayRevenue),
+                        style: AppFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.success,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Text(
-                '—',
-                style: AppFonts.poppins(
-                  fontSize: 16,
-                  color: AppColors.textLight,
-                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text('—', style: AppFonts.poppins(fontSize: 16, color: AppColors.textLight)),
               ),
               Expanded(
                 child: Column(
@@ -874,23 +898,23 @@ class _DashboardTabState extends State<_DashboardTab> {
                         color: AppColors.textMedium,
                       ),
                     ),
-                    Text(
-                      _fcFull(_todayExpenses),
-                      style: AppFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.error,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        _fcFull(_todayExpenses),
+                        style: AppFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.error,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Text(
-                '=',
-                style: AppFonts.poppins(
-                  fontSize: 16,
-                  color: AppColors.textLight,
-                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text('=', style: AppFonts.poppins(fontSize: 16, color: AppColors.textLight)),
               ),
               Expanded(
                 child: Column(
@@ -903,12 +927,15 @@ class _DashboardTabState extends State<_DashboardTab> {
                         color: AppColors.textMedium,
                       ),
                     ),
-                    Text(
-                      '${isPositive ? '+' : ''}${_fcFull(profit)}',
-                      style: AppFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: isPositive ? AppColors.success : AppColors.error,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '${isPositive ? '+' : ''}${_fcFull(profit)}',
+                        style: AppFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: isPositive ? AppColors.success : AppColors.error,
+                        ),
                       ),
                     ),
                   ],
@@ -991,28 +1018,37 @@ class _DashboardTabState extends State<_DashboardTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _fcFull(_todayRevenue),
-                    style: AppFonts.poppins(
-                      color: AppColors.textDark,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.5,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _fcFull(_todayRevenue),
+                        style: AppFonts.poppins(
+                          color: AppColors.textDark,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'dari ${_fcFull(_targetHarian)}',
-                    style: AppFonts.poppins(
-                      color: AppColors.textLight,
-                      fontSize: 12,
+                    const SizedBox(height: 2),
+                    Text(
+                      'dari ${_fcFull(_targetHarian)}',
+                      style: AppFonts.poppins(
+                        color: AppColors.textLight,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 16),
               Text(
                 pctLabel,
                 style: AppFonts.poppins(

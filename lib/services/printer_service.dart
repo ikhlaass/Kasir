@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/transaction_model.dart';
 import 'database_helper.dart';
 
@@ -18,15 +19,29 @@ class PrinterService {
     return Platform.isAndroid || Platform.isIOS;
   }
 
+  /// Request necessary bluetooth permissions
+  Future<bool> _requestPermissions() async {
+    if (Platform.isAndroid) {
+      await [
+        Permission.bluetoothScan,
+        Permission.bluetoothConnect,
+        Permission.location,
+      ].request();
+    } else if (Platform.isIOS) {
+      await Permission.bluetooth.request();
+    }
+
+    return await PrintBluetoothThermal.isPermissionBluetoothGranted;
+  }
+
   /// Get paired bluetooth devices
   Future<List<BluetoothInfo>> getPairedDevices() async {
     if (!isSupported) return [];
 
-    final bool result =
-        await PrintBluetoothThermal.isPermissionBluetoothGranted;
-    if (!result) {
-      // Trying to request permissions implicitly or explicitly depends on Android version
-      // PrintBluetoothThermal might request it natively on scan
+    final bool isGranted = await _requestPermissions();
+    if (!isGranted) {
+      debugPrint("Bluetooth permission not granted natively.");
+      return [];
     }
 
     try {
@@ -39,9 +54,14 @@ class PrinterService {
     }
   }
 
-  /// Connect to a device by mac address
   Future<bool> connect(String macAddress) async {
     if (!isSupported) return false;
+
+    final bool isGranted = await _requestPermissions();
+    if (!isGranted) {
+      debugPrint("Bluetooth permission not granted for connect.");
+      return false;
+    }
 
     try {
       final bool result = await PrintBluetoothThermal.connect(

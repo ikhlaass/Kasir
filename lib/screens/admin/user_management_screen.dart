@@ -319,8 +319,9 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       ),
       body: Consumer<UserManagementProvider>(
         builder: (context, provider, child) {
-          if (provider.isLoading)
+          if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
+          }
           if (provider.kasirList.isEmpty) {
             return Center(
               child: Column(

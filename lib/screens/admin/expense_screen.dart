@@ -69,7 +69,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setStateSB) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Form(
@@ -446,9 +446,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                                   const SizedBox(width: 8),
                                   PopupMenuButton<String>(
                                     onSelected: (val) {
-                                      if (val == 'edit')
+                                      if (val == 'edit') {
                                         _showExpenseDialog(expense: e);
-                                      if (val == 'delete') _deleteExpense(e);
+                                      }
+                                      if (val == 'delete') { _deleteExpense(e); }
                                     },
                                     itemBuilder: (c) => [
                                       PopupMenuItem(

@@ -27,7 +27,7 @@ class DatabaseHelper {
     final path = join(dbPath, 'kasir_nasi_goreng.db');
     return await openDatabase(
       path,
-      version: 9,
+      version: 10,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -128,6 +128,13 @@ class DatabaseHelper {
         ''');
       } catch (_) {}
     }
+    if (oldVersion < 10) {
+      try {
+        await db.execute(
+          'ALTER TABLE products ADD COLUMN image_cloud_url TEXT',
+        );
+      } catch (_) {}
+    }
   }
 
   Future<void> _createTables(Database db) async {
@@ -148,8 +155,9 @@ class DatabaseHelper {
         harga      REAL    NOT NULL,
         kategori   TEXT    NOT NULL,
         is_active  INTEGER NOT NULL DEFAULT 1,
-        image_path TEXT,
-        is_synced  INTEGER NOT NULL DEFAULT 0
+        image_path      TEXT,
+        image_cloud_url TEXT,
+        is_synced       INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
