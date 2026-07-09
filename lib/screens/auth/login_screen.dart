@@ -100,15 +100,23 @@ class _LoginScreenState extends State<LoginScreen> {
     Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      floatingActionButton: IconButton(
-        icon: Icon(
-          ThemeManager.isDark.value ? Icons.light_mode : Icons.dark_mode,
-          color: AppColors.warning,
-          size: 28,
-        ),
-        onPressed: () {
-          ThemeManager.isDark.value = !ThemeManager.isDark.value;
-        },
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              ThemeManager.isDark.value ? Icons.light_mode : Icons.dark_mode,
+              color: AppColors.warning,
+              size: 28,
+            ),
+            onPressed: () {
+              ThemeManager.isDark.value = !ThemeManager.isDark.value;
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(

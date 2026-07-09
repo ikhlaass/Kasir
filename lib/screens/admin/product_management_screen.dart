@@ -20,12 +20,21 @@ class ProductManagementScreen extends StatefulWidget {
 }
 
 class _ProductManagementScreenState extends State<ProductManagementScreen> {
+  final TextEditingController _searchCtrl = TextEditingController();
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductProvider>().loadProducts();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
   }
 
   void _showProductDialog({ProductModel? product}) {
@@ -380,8 +389,36 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: AppColors.border, height: 1),
+          preferredSize: const Size.fromHeight(60),
+          child: Container(
+            color: AppColors.background,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: TextField(
+              controller: _searchCtrl,
+              onChanged: (value) => setState(() => _searchQuery = value),
+              decoration: InputDecoration(
+                hintText: 'Cari menu...',
+                hintStyle: AppFonts.poppins(color: AppColors.textLight, fontSize: 14),
+                prefixIcon: Icon(Icons.search, color: AppColors.textMedium),
+                suffixIcon: _searchQuery.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.clear, color: AppColors.textMedium),
+                        onPressed: () {
+                          _searchCtrl.clear();
+                          setState(() => _searchQuery = '');
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: AppColors.surface,
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -437,12 +474,28 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
             );
           }
 
+          final filteredProducts = provider.products.where((p) {
+            return p.namaMenu.toLowerCase().contains(_searchQuery.toLowerCase());
+          }).toList();
+
+          if (filteredProducts.isEmpty) {
+            return Center(
+              child: Text(
+                'Menu tidak ditemukan',
+                style: AppFonts.poppins(
+                  fontSize: 14,
+                  color: AppColors.textMedium,
+                ),
+              ),
+            );
+          }
+
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-            itemCount: provider.products.length,
+            itemCount: filteredProducts.length,
             separatorBuilder: (ctx, gap) => const SizedBox(height: 12),
             itemBuilder: (ctx, index) {
-              final product = provider.products[index];
+              final product = filteredProducts[index];
               return _ProductCard(
                 product: product,
                 onEdit: () => _showProductDialog(product: product),

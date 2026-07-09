@@ -30,6 +30,8 @@ class CashierScreen extends StatefulWidget {
 class _CashierScreenState extends State<CashierScreen> {
   String _selectedCategory = 'Semua';
   int _currentIndex = 0;
+  String _searchQuery = '';
+  final TextEditingController _searchCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -37,6 +39,12 @@ class _CashierScreenState extends State<CashierScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductProvider>().loadActiveProducts();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _closeShift() async {
@@ -358,16 +366,50 @@ class _CashierScreenState extends State<CashierScreen> {
               final isWide = MediaQuery.of(ctx).size.width >= 950;
               return Row(
                 children: [
-                  Text(
-                    'Kasir',
-                    style: AppFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textDark,
-                      letterSpacing: -0.5,
+                  if (isWide) ...[
+                    Text(
+                      'Kasir',
+                      style: AppFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                  ],
+                  Expanded(
+                    child: SizedBox(
+                      height: 40,
+                      child: TextField(
+                        controller: _searchCtrl,
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                        decoration: InputDecoration(
+                          hintText: 'Cari menu...',
+                          hintStyle: AppFonts.poppins(color: AppColors.textLight, fontSize: 13),
+                          prefixIcon: Icon(Icons.search, color: AppColors.textMedium, size: 20),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(Icons.clear, color: AppColors.textMedium, size: 16),
+                                  onPressed: () {
+                                    _searchCtrl.clear();
+                                    setState(() => _searchQuery = '');
+                                  },
+                                )
+                              : null,
+                          filled: true,
+                          fillColor: AppColors.surface,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  if (!isWide)
+                  if (!isWide) ...[
+                    const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
                         ThemeManager.isDark.value
@@ -381,8 +423,9 @@ class _CashierScreenState extends State<CashierScreen> {
                       },
                       tooltip: 'Ganti Tema',
                     ),
+                  ],
 
-                  const Spacer(),
+                  if (isWide) const Spacer(),
                   if (!isWide && widget.user.role == 'admin')
                     IconButton(
                       icon: Icon(
@@ -510,7 +553,7 @@ class _CashierScreenState extends State<CashierScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final products = _selectedCategory == 'Semua'
+              final filteredByCategory = _selectedCategory == 'Semua'
                   ? provider.products
                         .where(
                           (p) => p.kategori.toLowerCase() != 'extra topping',
@@ -519,6 +562,10 @@ class _CashierScreenState extends State<CashierScreen> {
                   : provider.products
                         .where((p) => p.kategori == _selectedCategory)
                         .toList();
+
+              final products = filteredByCategory.where((p) {
+                return p.namaMenu.toLowerCase().contains(_searchQuery.toLowerCase());
+              }).toList();
 
               if (products.isEmpty) {
                 return Center(
@@ -557,7 +604,7 @@ class _CashierScreenState extends State<CashierScreen> {
       totalHarga: cart.totalHarga,
       metodePembayaran: 'Belum Bayar',
       status: 'pending',
-      namaPelanggan: 'Pelanggan Umum',
+      namaPelanggan: 'Pelanggan',
       tanggalWaktu: DateTime.now().toIso8601String(),
     );
     final details = cart.items

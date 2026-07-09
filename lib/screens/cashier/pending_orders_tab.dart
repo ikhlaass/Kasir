@@ -295,9 +295,9 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        trx.namaPelanggan?.isNotEmpty == true
-                            ? trx.namaPelanggan!
-                            : 'Pelanggan ${trx.id}',
+                        (trx.namaPelanggan == 'Pelanggan' || trx.namaPelanggan == 'Pelanggan Umum' || trx.namaPelanggan?.isEmpty == true)
+                            ? 'Pelanggan'
+                            : trx.namaPelanggan!,
                         style: AppFonts.poppins(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,

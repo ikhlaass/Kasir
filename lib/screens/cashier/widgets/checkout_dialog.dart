@@ -322,7 +322,7 @@ Future<void> showCheckoutDialog(BuildContext context, CartProvider cart, UserMod
                                             totalHarga: cart.totalHarga,
                                             metodePembayaran: selectedMethod,
                                             status: 'active',
-                                            namaPelanggan: 'Pelanggan Umum',
+                                            namaPelanggan: 'Pelanggan',
                                             tanggalWaktu: DateTime.now()
                                                 .toIso8601String(),
                                           );

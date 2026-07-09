@@ -466,7 +466,7 @@ class DatabaseHelper {
     final maps = await db.query(
       'transactions',
       where: "status IN ('pending', 'active')",
-      orderBy: 'id DESC',
+      orderBy: 'id ASC',
     );
     return maps.map((m) => TransactionModel.fromMap(m)).toList();
   }
