@@ -7,12 +7,12 @@ import '../../../services/supabase_service.dart';
 import '../../../providers/product_provider.dart';
 import '../../admin/admin_dashboard_screen.dart';
 import '../../admin/printer_settings_screen.dart';
+import '../../auth/login_screen.dart';
 
 class SidebarWidget extends StatelessWidget {
   final UserModel user;
   final int currentIndex;
   final ValueChanged<int> onIndexChanged;
-  final VoidCallback onLogout;
   final VoidCallback onKasKeluar;
   final VoidCallback onCloseShift;
 
@@ -21,7 +21,6 @@ class SidebarWidget extends StatelessWidget {
     required this.user,
     required this.currentIndex,
     required this.onIndexChanged,
-    required this.onLogout,
     required this.onKasKeluar,
     required this.onCloseShift,
   });
@@ -316,14 +315,7 @@ class SidebarWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.logout_rounded, size: 18),
-                    color: AppColors.error,
-                    onPressed: onLogout,
-                    tooltip: 'Logout',
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
+
                 ],
               ),
             ),

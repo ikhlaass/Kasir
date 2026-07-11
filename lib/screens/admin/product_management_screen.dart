@@ -570,12 +570,16 @@ class _ProductCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        product.namaMenu,
-                        style: AppFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: AppColors.textDark,
+                      Expanded(
+                        child: Text(
+                          product.namaMenu,
+                          style: AppFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: AppColors.textDark,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       if (inactive) ...[

@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           Text(
-                            'Selamat Datang',
+                            'Login Admin',
                             style: AppFonts.poppins(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Masuk ke akun Anda untuk melanjutkan',
+                            'Masuk ke akun admin untuk melanjutkan',
                             style: AppFonts.poppins(
                               fontSize: 14,
                               color: AppColors.textMedium,

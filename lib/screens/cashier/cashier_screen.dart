@@ -174,52 +174,7 @@ class _CashierScreenState extends State<CashierScreen> {
     );
   }
 
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text(
-          'Keluar?',
-          style: AppFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textDark,
-          ),
-        ),
-        content: Text(
-          'Apakah Anda yakin ingin logout?',
-          style: AppFonts.poppins(fontSize: 13, color: AppColors.textMedium),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              'Batal',
-              style: AppFonts.poppins(color: AppColors.textMedium),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            onPressed: () {
-              context.read<CartProvider>().clearCart();
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (_) => false,
-              );
-            },
-            child: Text(
-              'Logout',
-              style: AppFonts.poppins(fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
+  // Logout dihilangkan karena kasir tidak perlu login
   @override
   Widget build(BuildContext context) {
     Theme.of(context);
@@ -229,7 +184,7 @@ class _CashierScreenState extends State<CashierScreen> {
       backgroundColor: AppColors.background,
       body: Row(
         children: [
-          if (isWide) SidebarWidget(user: widget.user, currentIndex: _currentIndex, onIndexChanged: (i) => setState(() => _currentIndex = i), onLogout: _showLogoutDialog, onKasKeluar: _showKasKeluarDialog, onCloseShift: _closeShift),
+          if (isWide) SidebarWidget(user: widget.user, currentIndex: _currentIndex, onIndexChanged: (i) => setState(() => _currentIndex = i), onKasKeluar: _showKasKeluarDialog, onCloseShift: _closeShift),
           Expanded(
             child: _currentIndex == 0
                 ? _buildBuatPesananView(isWide)
@@ -335,6 +290,7 @@ class _CashierScreenState extends State<CashierScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Padding(
         padding: EdgeInsets.only(
@@ -346,7 +302,12 @@ class _CashierScreenState extends State<CashierScreen> {
             color: AppColors.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
-          child: CartSectionWidget(onSaveOrder: _savePendingOrder, onPay: (ctx, cart) => showCheckoutDialog(ctx, cart, widget.user)),
+          child: SafeArea(
+            child: CartSectionWidget(
+              onSaveOrder: _savePendingOrder,
+              onPay: (ctx, cart) => showCheckoutDialog(ctx, cart, widget.user),
+            ),
+          ),
         ),
       ),
     );
@@ -426,27 +387,21 @@ class _CashierScreenState extends State<CashierScreen> {
                   ],
 
                   if (isWide) const Spacer(),
-                  if (!isWide && widget.user.role == 'admin')
+                  if (!isWide)
                     IconButton(
                       icon: Icon(
                         Icons.admin_panel_settings_outlined,
                         color: AppColors.primary,
                       ),
-                      onPressed: () => Navigator.pushReplacement(
+                      onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              AdminDashboardScreen(user: widget.user),
+                          builder: (_) => const LoginScreen(),
                         ),
                       ),
-                      tooltip: 'Ke Admin Panel',
+                      tooltip: 'Login Admin',
                     ),
-                  if (!isWide)
-                    IconButton(
-                      icon: Icon(Icons.logout, color: AppColors.error),
-                      onPressed: _showLogoutDialog,
-                      tooltip: 'Keluar',
-                    ),
+
                   if (!isWide)
                     IconButton(
                       icon: Icon(Icons.money_off, color: AppColors.warning),

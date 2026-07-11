@@ -56,26 +56,23 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
       return;
     }
 
-    // Request permissions for Android 12+
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-      Permission.location,
-    ].request();
 
-    if (statuses[Permission.bluetoothConnect]?.isDenied == true ||
-        statuses[Permission.bluetoothScan]?.isDenied == true) {
+
+    setState(() => _isScanning = true);
+
+    final bool isBluetoothOn = await PrintBluetoothThermal.bluetoothEnabled;
+    if (!isBluetoothOn) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Izin Bluetooth diperlukan untuk mencari printer.'),
+            content: Text('Silakan nyalakan Bluetooth HP Anda terlebih dahulu.'),
           ),
         );
+        setState(() => _isScanning = false);
       }
       return;
     }
 
-    setState(() => _isScanning = true);
     final devices = await _printerService.getPairedDevices();
 
     if (mounted) {

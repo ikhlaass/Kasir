@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'providers/product_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/user_management_provider.dart';
-import 'screens/auth/login_screen.dart';
+import 'screens/auth/init_screen.dart';
 import 'utils/app_colors.dart';
 import 'utils/app_fonts.dart';
 
@@ -60,7 +60,14 @@ class KasirApp extends StatelessWidget {
             title: 'Kasir Nasi Goreng',
             debugShowCheckedModeBanner: false,
             theme: _buildTheme(isDark),
-            home: const LoginScreen(),
+            builder: (context, child) {
+              return GestureDetector(
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                behavior: HitTestBehavior.opaque,
+                child: child,
+              );
+            },
+            home: const InitScreen(),
           );
         },
       ),

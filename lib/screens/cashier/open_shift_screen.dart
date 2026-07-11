@@ -5,6 +5,7 @@ import '../../services/database_helper.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_fonts.dart';
 import 'cashier_screen.dart';
+import '../auth/login_screen.dart';
 
 class OpenShiftScreen extends StatefulWidget {
   final UserModel user;
@@ -64,6 +65,21 @@ class _OpenShiftScreenState extends State<OpenShiftScreen> {
     Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.admin_panel_settings_outlined, color: AppColors.primary),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            ),
+            tooltip: 'Login Admin',
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),

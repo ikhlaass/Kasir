@@ -16,11 +16,14 @@ void showModifierDialog(BuildContext context, ProductModel product) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
+    useSafeArea: true,
     backgroundColor: Colors.transparent,
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, setStateSB) {
-        return Container(
-          height: MediaQuery.of(ctx).size.height * 0.8,
+        return SafeArea(
+          bottom: true,
+          child: Container(
+            height: MediaQuery.of(ctx).size.height * 0.8,
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: const BorderRadius.vertical(
@@ -253,8 +256,9 @@ void showModifierDialog(BuildContext context, ProductModel product) {
               ),
             ],
           ),
-        );
-      },
-    ),
+        ),
+      );
+    },
+  ),
   );
 }
