@@ -9,7 +9,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_fonts.dart';
 import '../../providers/user_management_provider.dart';
 import '../../providers/product_provider.dart';
-import '../auth/login_screen.dart';
+import '../auth/init_screen.dart';
 import 'package:path_provider/path_provider.dart';
 class SettingsScreen extends StatefulWidget {
   final String adminUsername;
@@ -152,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () => Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              MaterialPageRoute(builder: (_) => const InitScreen()),
               (_) => false,
             ),
             child: Text(

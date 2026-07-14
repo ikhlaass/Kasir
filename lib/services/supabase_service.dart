@@ -162,8 +162,10 @@ class SupabaseService {
           final map = Map<String, dynamic>.from(record);
           map.remove('is_synced');
 
-          // Jika tabel products dan ada image_path lokal, upload ke cloud
           if (table == 'products') {
+            map.remove('stok');
+            map.remove('image_cloud_url');
+            
             final imagePath = map['image_path'] as String?;
             if (imagePath != null &&
                 imagePath.isNotEmpty &&
@@ -171,7 +173,7 @@ class SupabaseService {
                 !imagePath.startsWith('http')) {
               final cloudUrl = await uploadFile('products', imagePath);
               if (cloudUrl != null) {
-                map['image_cloud_url'] = cloudUrl;
+                map['image_path'] = cloudUrl;
                 // Update lokal juga
                 await db.update(
                   'products',
@@ -180,6 +182,8 @@ class SupabaseService {
                   whereArgs: [record['id']],
                 );
               }
+            } else if (record['image_cloud_url'] != null) {
+               map['image_path'] = record['image_cloud_url'];
             }
           }
 
